@@ -1,7 +1,24 @@
+import { useState } from "react";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { z } from "zod";
+
+const emailSchema = z.string().trim().email("Please enter a valid email");
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = () => {
+    try {
+      emailSchema.parse(email);
+      toast.success("Thanks for subscribing!");
+      setEmail("");
+    } catch {
+      toast.error("Please enter a valid email");
+    }
+  };
+
   return (
     <footer className="bg-card border-t border-border">
       {/* Newsletter Section */}
@@ -19,10 +36,12 @@ const Footer = () => {
             <div className="flex w-full md:w-auto gap-3">
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="flex-1 md:w-80 px-5 py-3 rounded-lg bg-background border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-gold/50"
               />
-              <Button variant="gold" size="lg">
+              <Button variant="gold" size="lg" onClick={handleSubscribe}>
                 Subscribe
               </Button>
             </div>
@@ -36,7 +55,7 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="col-span-2">
             <a href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[hsl(43,100%,50%)] to-[hsl(35,100%,40%)] flex items-center justify-center">
                 <span className="text-primary-foreground font-display font-bold text-xl">B</span>
               </div>
               <span className="font-display text-2xl font-semibold text-foreground">
@@ -48,10 +67,17 @@ const Footer = () => {
               Curated selection, intelligent search, exceptional service.
             </p>
             <div className="flex gap-3">
-              {[Facebook, Twitter, Instagram, Youtube, Linkedin].map((Icon, index) => (
+              {[
+                { Icon: Facebook, label: "Facebook" },
+                { Icon: Twitter, label: "Twitter" },
+                { Icon: Instagram, label: "Instagram" },
+                { Icon: Youtube, label: "Youtube" },
+                { Icon: Linkedin, label: "LinkedIn" },
+              ].map(({ Icon, label }) => (
                 <a
-                  key={index}
+                  key={label}
                   href="#"
+                  aria-label={label}
                   className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-gold/20 hover:text-gold transition-colors"
                 >
                   <Icon className="w-4 h-4" />

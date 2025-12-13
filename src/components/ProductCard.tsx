@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Heart, Star, ShoppingBag, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
 
 interface Product {
   id: number;
@@ -22,14 +23,25 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const { addToCart } = useCart();
 
   const discount = product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0;
 
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      brand: product.brand,
+      price: product.price,
+      image: product.images[0],
+    });
+  };
+
   return (
     <div
-      className="group relative bg-gradient-card rounded-2xl overflow-hidden border border-border hover:border-gold/30 transition-all duration-500"
+      className="group relative bg-gradient-to-b from-[hsl(0,0%,8%)] to-[hsl(0,0%,5%)] rounded-2xl overflow-hidden border border-border hover:border-gold/30 transition-all duration-500"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
@@ -46,7 +58,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       {/* Favorite Button */}
       <button
         onClick={() => setIsFavorite(!isFavorite)}
-        className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-gold/20 transition-colors"
+        className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-[hsl(0,0%,10%)]/50 backdrop-blur-xl border border-[hsl(0,0%,18%)]/50 flex items-center justify-center hover:bg-gold/20 transition-colors"
       >
         <Heart
           className={`w-5 h-5 transition-colors ${
@@ -86,7 +98,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <Button variant="glass" size="lg" className="flex-1">
+          <Button variant="glass" size="lg" className="flex-1" onClick={handleAddToCart}>
             <ShoppingBag className="w-4 h-4" />
             Add to Cart
           </Button>
