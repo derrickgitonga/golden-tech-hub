@@ -30,7 +30,7 @@ const Admin = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!formData.name || !formData.brand || !formData.price || formData.imageUrls.every(url => !url.trim())) {
@@ -41,8 +41,7 @@ const Admin = () => {
         const validImages = formData.imageUrls.filter(url => url.trim() !== "");
         const validFeatures = formData.features.filter(feature => feature.trim() !== "");
 
-        const newProduct: Product = {
-            id: Date.now(), // Simple ID generation
+        const newProduct: Omit<Product, "id"> = {
             name: formData.name,
             brand: formData.brand,
             price: Number(formData.price),
@@ -56,7 +55,7 @@ const Admin = () => {
             features: validFeatures,
         };
 
-        addProduct(newProduct);
+        await addProduct(newProduct);
         toast.success("Product added successfully!");
 
         // Reset form
@@ -75,9 +74,9 @@ const Admin = () => {
         });
     };
 
-    const handleDelete = (id: number) => {
+    const handleDelete = async (id: number) => {
         if (window.confirm("Are you sure you want to delete this product?")) {
-            deleteProduct(id);
+            await deleteProduct(id);
             toast.success("Product deleted successfully");
         }
     };
