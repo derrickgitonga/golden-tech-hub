@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Heart, Star, ShoppingBag, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
@@ -61,19 +62,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
         className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-[hsl(0,0%,10%)]/50 backdrop-blur-xl border border-[hsl(0,0%,18%)]/50 flex items-center justify-center hover:bg-gold/20 transition-colors"
       >
         <Heart
-          className={`w-5 h-5 transition-colors ${
-            isFavorite ? "fill-gold text-gold" : "text-muted-foreground"
-          }`}
+          className={`w-5 h-5 transition-colors ${isFavorite ? "fill-gold text-gold" : "text-muted-foreground"
+            }`}
         />
       </button>
 
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-secondary/50">
-        <img
-          src={product.images[currentImageIndex]}
-          alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
+        <Link to={`/product/${product.id}`}>
+          <img
+            src={product.images[currentImageIndex]}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+        </Link>
 
         {/* Image Dots */}
         {product.images.length > 1 && (
@@ -82,11 +84,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <button
                 key={index}
                 onMouseEnter={() => setCurrentImageIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  index === currentImageIndex
+                className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex
                     ? "bg-gold w-6"
                     : "bg-foreground/30 hover:bg-foreground/50"
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -94,9 +95,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         {/* Quick Actions */}
         <div
-          className={`absolute inset-x-4 bottom-4 flex gap-2 transition-all duration-300 ${
-            isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
+          className={`absolute inset-x-4 bottom-4 flex gap-2 transition-all duration-300 ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
         >
           <Button variant="glass" size="lg" className="flex-1" onClick={handleAddToCart}>
             <ShoppingBag className="w-4 h-4" />
@@ -113,9 +113,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="text-xs text-gold font-medium uppercase tracking-wider mb-2">
           {product.brand}
         </div>
-        <h3 className="font-display text-lg font-medium text-foreground mb-3 line-clamp-2 group-hover:text-gold transition-colors">
-          {product.name}
-        </h3>
+        <Link to={`/product/${product.id}`}>
+          <h3 className="font-display text-lg font-medium text-foreground mb-3 line-clamp-2 group-hover:text-gold transition-colors">
+            {product.name}
+          </h3>
+        </Link>
 
         {/* Rating */}
         <div className="flex items-center gap-2 mb-4">
@@ -123,11 +125,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-4 h-4 ${
-                  i < Math.floor(product.rating)
+                className={`w-4 h-4 ${i < Math.floor(product.rating)
                     ? "fill-gold text-gold"
                     : "text-muted-foreground"
-                }`}
+                  }`}
               />
             ))}
           </div>

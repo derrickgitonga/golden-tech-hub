@@ -19,11 +19,11 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: "Smartphones", href: "#" },
-    { name: "Laptops", href: "#" },
-    { name: "Audio", href: "#" },
-    { name: "Wearables", href: "#" },
-    { name: "Accessories", href: "#" },
+    { name: "Smartphones", href: "/category/smartphones" },
+    { name: "Laptops", href: "/category/laptops" },
+    { name: "Audio", href: "/category/audio" },
+    { name: "Wearables", href: "/category/wearables" },
+    { name: "Accessories", href: "/category/accessories" },
   ];
 
   return (
@@ -43,13 +43,13 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -58,7 +58,7 @@ const Header = () => {
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <Search className="w-5 h-5" />
             </Button>
-            
+
             {user ? (
               <Button variant="ghost" size="icon" className="hidden md:flex" onClick={handleSignOut}>
                 <LogOut className="w-5 h-5" />
@@ -68,7 +68,7 @@ const Header = () => {
                 <User className="w-5 h-5" />
               </Button>
             )}
-            
+
             <Button variant="ghost" size="icon" className="relative" onClick={() => setIsOpen(true)}>
               <ShoppingBag className="w-5 h-5" />
               {totalItems > 0 && (
@@ -77,7 +77,7 @@ const Header = () => {
                 </span>
               )}
             </Button>
-            
+
             <Button
               variant="ghost"
               size="icon"
@@ -94,14 +94,14 @@ const Header = () => {
           <div className="lg:hidden py-4 border-t border-border animate-fade-in">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="text-foreground hover:text-gold transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
               <div className="pt-4 border-t border-border">
                 {user ? (

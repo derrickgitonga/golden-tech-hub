@@ -1,4 +1,5 @@
 import { Smartphone, Laptop, Headphones, Watch, Cpu, Camera, Monitor, Gamepad2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const categories = [
   { name: "Smartphones", icon: Smartphone, count: "45K+" },
@@ -37,9 +38,9 @@ const CategoriesSection = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {categories.map((category, index) => (
-            <a
+            <Link
               key={category.name}
-              href="#"
+              to={`/category/${category.name.toLowerCase()}`}
               className="group relative p-6 md:p-8 rounded-2xl bg-background border border-border hover:border-gold/50 transition-all duration-500 overflow-hidden opacity-0 animate-scale-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -64,7 +65,7 @@ const CategoriesSection = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

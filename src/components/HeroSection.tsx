@@ -1,9 +1,17 @@
 import { Search, Sparkles, Zap } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   const suggestions = [
     "MacBook Pro for video editing",
@@ -22,7 +30,7 @@ const HeroSection = () => {
       </div>
 
       {/* Grid pattern overlay */}
-      <div 
+      <div
         className="absolute inset-0 opacity-[0.02]"
         style={{
           backgroundImage: `linear-gradient(hsl(var(--gold)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--gold)) 1px, transparent 1px)`,
@@ -47,7 +55,7 @@ const HeroSection = () => {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 opacity-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            Discover the world's finest electronics with our intelligent search. 
+            Discover the world's finest electronics with our intelligent search.
             Find exactly what you need, powered by machine learning.
           </p>
 
@@ -67,7 +75,7 @@ const HeroSection = () => {
                   placeholder="Describe what you're looking for..."
                   className="flex-1 px-5 py-5 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none text-lg"
                 />
-                <Button variant="gold" size="lg" className="m-2 rounded-lg">
+                <Button variant="gold" size="lg" className="m-2 rounded-lg" onClick={handleSearch}>
                   <Search className="w-5 h-5" />
                   <span className="hidden sm:inline">Search</span>
                 </Button>
@@ -81,7 +89,7 @@ const HeroSection = () => {
             {suggestions.map((suggestion, index) => (
               <button
                 key={index}
-                onClick={() => setSearchQuery(suggestion)}
+                onClick={() => navigate(`/search?q=${encodeURIComponent(suggestion)}`)}
                 className="px-4 py-2 rounded-full border border-border text-sm text-muted-foreground hover:text-foreground hover:border-gold/50 hover:bg-gold/5 transition-all duration-300"
               >
                 {suggestion}
