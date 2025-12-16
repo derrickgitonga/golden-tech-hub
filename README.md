@@ -32,9 +32,26 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 npm i
 
+```
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
+
+## Environment Setup
+
+This project uses Supabase for backend services. You need to configure environment variables for the application to work correctly.
+
+1.  Copy `.env.example` to `.env`:
+    ```sh
+    cp .env.example .env
+    ```
+2.  Fill in your Supabase credentials in the `.env` file:
+    -   `VITE_SUPABASE_URL`: Your Supabase project URL
+    -   `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+
+**For Production (Vercel/Netlify/etc.):**
+You must add these same environment variables to your deployment platform's settings.
+
 
 **Edit a file directly in GitHub**
 
