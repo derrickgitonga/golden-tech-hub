@@ -63,7 +63,7 @@ const Footer = () => {
               </span>
             </a>
             <p className="text-muted-foreground text-sm leading-relaxed mb-6 max-w-xs">
-              The world's premier destination for premium electronics. 
+              The world's premier destination for premium electronics.
               Curated selection, intelligent search, exceptional service.
             </p>
             <div className="flex gap-3">
@@ -92,7 +92,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {["Smartphones", "Laptops", "Audio", "Wearables", "Accessories", "Gaming"].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-gold transition-colors">
+                  <a href={`/category/${item.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-gold transition-colors">
                     {item}
                   </a>
                 </li>
@@ -106,7 +106,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {["About Us", "Careers", "Press", "Blog", "Affiliate Program", "Partners"].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-gold transition-colors">
+                  <a href="/coming-soon" className="text-sm text-muted-foreground hover:text-gold transition-colors">
                     {item}
                   </a>
                 </li>
@@ -120,7 +120,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {["Help Center", "Track Order", "Shipping Info", "Returns", "Warranty", "Contact Us"].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-gold transition-colors">
+                  <a href="/coming-soon" className="text-sm text-muted-foreground hover:text-gold transition-colors">
                     {item}
                   </a>
                 </li>
@@ -159,13 +159,13 @@ const Footer = () => {
               © 2024 BackMarket. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
-              <a href="#" className="text-sm text-muted-foreground hover:text-gold transition-colors">
+              <a href="/coming-soon" className="text-sm text-muted-foreground hover:text-gold transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-gold transition-colors">
+              <a href="/coming-soon" className="text-sm text-muted-foreground hover:text-gold transition-colors">
                 Terms of Service
               </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-gold transition-colors">
+              <a href="/coming-soon" className="text-sm text-muted-foreground hover:text-gold transition-colors">
                 Cookie Settings
               </a>
             </div>

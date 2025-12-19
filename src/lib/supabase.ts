@@ -8,4 +8,8 @@ if (!supabaseUrl || !supabaseKey) {
     console.warn("Missing Supabase credentials. Please check your .env file.");
 }
 
-export const supabase = createClient(supabaseUrl || '', supabaseKey || '');
+// Ensure we have valid strings for the client, even if they are empty (which will cause auth errors but prevent crash)
+const validSupabaseUrl = supabaseUrl || 'https://placeholder.supabase.co';
+const validSupabaseKey = supabaseKey || 'placeholder';
+
+export const supabase = createClient(validSupabaseUrl, validSupabaseKey);
