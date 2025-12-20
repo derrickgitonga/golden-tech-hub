@@ -1,15 +1,23 @@
 import { ArrowRight, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "./ProductCard";
-
 import { useProducts } from "@/contexts/ProductContext";
+import { useNavigate } from "react-router-dom";
 
 const TrendingSection = () => {
   const { products } = useProducts();
-  // Filter for trending products (e.g., first 8 or specifically marked)
-  // For now, let's just take the first 8 products that are NOT Google products (to keep the sections distinct if desired, or just mix them)
-  // Actually, let's just show the first 8 products from the context as "Trending"
-  const trendingProducts = products.slice(0, 8);
+  const navigate = useNavigate();
+
+  // Filter for Apple products (latest first)
+  const appleProducts = products
+    .filter(p => p.brand === "Apple")
+    .slice(0, 4);
+
+  // Filter for Samsung products (latest first)
+  const samsungProducts = products
+    .filter(p => p.brand === "Samsung")
+    .slice(0, 4);
+
   return (
     <section className="py-24 bg-background relative">
       {/* Subtle gradient overlay */}
@@ -27,23 +35,51 @@ const TrendingSection = () => {
               Most Popular <span className="text-gradient-gold">Products</span>
             </h2>
           </div>
-          <Button variant="gold-outline" size="lg" className="self-start md:self-auto">
+          <Button
+            variant="gold-outline"
+            size="lg"
+            className="self-start md:self-auto"
+            onClick={() => navigate('/search')}
+          >
             View All Products
             <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {trendingProducts.map((product, index) => (
-            <div
-              key={product.id}
-              className="opacity-0 animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
+        {/* Apple Row */}
+        <div className="mb-16">
+          <h3 className="font-display text-2xl font-medium text-foreground mb-6 flex items-center gap-2">
+            <span className="text-2xl">🍎</span> Latest iPhone Series
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {appleProducts.map((product, index) => (
+              <div
+                key={product.id}
+                className="opacity-0 animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Samsung Row */}
+        <div>
+          <h3 className="font-display text-2xl font-medium text-foreground mb-6 flex items-center gap-2">
+            <span className="text-2xl">🌌</span> Latest Samsung Series
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {samsungProducts.map((product, index) => (
+              <div
+                key={product.id}
+                className="opacity-0 animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

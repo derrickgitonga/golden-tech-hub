@@ -13,11 +13,7 @@ const HeroSection = () => {
     }
   };
 
-  const suggestions = [
-    "MacBook Pro for video editing",
-    "Wireless headphones under $300",
-    "Gaming laptop with RTX 4070",
-  ];
+
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
@@ -37,6 +33,36 @@ const HeroSection = () => {
           backgroundSize: "100px 100px",
         }}
       />
+
+      {/* Left Ad - iPhone 17 */}
+      <div className="hidden xl:flex absolute left-8 top-1/2 -translate-y-1/2 w-64 h-[400px] bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex-col items-center justify-center group hover:border-gold/30 transition-all duration-500 animate-fade-in z-20">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          className="w-full h-full object-cover"
+        >
+          <source src="/iphone-ad.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      {/* Right Ad - S25 Ultra */}
+      <div className="hidden xl:flex absolute right-8 top-1/2 -translate-y-1/2 w-64 h-[400px] bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex-col items-center justify-center group hover:border-gold/30 transition-all duration-500 animate-fade-in z-20">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          className="w-full h-full object-cover"
+        >
+          <source src="/Samsung-ad.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
 
       <div className="container mx-auto px-4 relative z-10 pt-20">
         <div className="max-w-4xl mx-auto text-center">
@@ -83,47 +109,13 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Suggestions */}
-          <div className="flex flex-wrap items-center justify-center gap-3 opacity-0 animate-fade-in" style={{ animationDelay: "0.8s" }}>
-            <span className="text-sm text-muted-foreground">Try:</span>
-            {suggestions.map((suggestion, index) => (
-              <button
-                key={index}
-                onClick={() => navigate(`/search?q=${encodeURIComponent(suggestion)}`)}
-                className="px-4 py-2 rounded-full border border-border text-sm text-muted-foreground hover:text-foreground hover:border-gold/50 hover:bg-gold/5 transition-all duration-300"
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
+          {/* Suggestions removed */}
 
-          {/* Stats */}
-          <div className="flex items-center justify-center gap-8 md:gap-16 mt-20 opacity-0 animate-fade-in" style={{ animationDelay: "1s" }}>
-            <div className="text-center">
-              <div className="font-display text-3xl md:text-4xl font-semibold text-gradient-gold">2M+</div>
-              <div className="text-sm text-muted-foreground mt-1">Products</div>
-            </div>
-            <div className="w-px h-12 bg-border" />
-            <div className="text-center">
-              <div className="font-display text-3xl md:text-4xl font-semibold text-gradient-gold">99.9%</div>
-              <div className="text-sm text-muted-foreground mt-1">Accuracy</div>
-            </div>
-            <div className="w-px h-12 bg-border" />
-            <div className="text-center">
-              <div className="font-display text-3xl md:text-4xl font-semibold text-gradient-gold">50K+</div>
-              <div className="text-sm text-muted-foreground mt-1">Reviews</div>
-            </div>
-          </div>
+          {/* Stats removed and moved to bottom */}
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 animate-fade-in" style={{ animationDelay: "1.2s" }}>
-        <span className="text-xs text-muted-foreground uppercase tracking-widest">Explore</span>
-        <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2">
-          <div className="w-1 h-2 bg-gold rounded-full animate-bounce" />
-        </div>
-      </div>
+      {/* Scroll indicator removed and moved to bottom */}
     </section>
   );
 };

@@ -49,6 +49,17 @@ const ProductDetails = () => {
         });
     };
 
+    const handleBuyNow = () => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            brand: product.brand,
+            price: product.price,
+            image: product.images[0],
+        });
+        navigate("/checkout");
+    };
+
     return (
         <div className="min-h-screen bg-background">
             <Header />
@@ -156,10 +167,13 @@ const ProductDetails = () => {
                             </div>
                         )}
 
-                        <div className="pt-8 border-t border-border">
-                            <Button size="lg" className="w-full md:w-auto min-w-[200px]" onClick={handleAddToCart} variant="gold">
+                        <div className="pt-8 border-t border-border flex gap-4">
+                            <Button size="lg" className="flex-1" onClick={handleAddToCart} variant="gold-outline">
                                 <ShoppingBag className="w-5 h-5 mr-2" />
                                 Add to Cart
+                            </Button>
+                            <Button size="lg" className="flex-1" onClick={handleBuyNow} variant="gold">
+                                Buy Now
                             </Button>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Heart, Star, ShoppingBag, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
@@ -25,12 +25,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const discount = product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent link navigation
+    e.stopPropagation();
     addToCart({
       id: product.id,
       name: product.name,
@@ -38,6 +41,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
       price: product.price,
       image: product.images[0],
     });
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent link navigation
+    e.stopPropagation();
+    addToCart({
+      id: product.id,
+      name: product.name,
+      brand: product.brand,
+      price: product.price,
+      image: product.images[0],
+    });
+    navigate("/checkout");
   };
 
   return (
@@ -58,7 +74,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
       {/* Favorite Button */}
       <button
-        onClick={() => setIsFavorite(!isFavorite)}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsFavorite(!isFavorite);
+        }}
         className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-[hsl(0,0%,10%)]/50 backdrop-blur-xl border border-[hsl(0,0%,18%)]/50 flex items-center justify-center hover:bg-gold/20 transition-colors"
       >
         <Heart
@@ -85,8 +105,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 key={index}
                 onMouseEnter={() => setCurrentImageIndex(index)}
                 className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex
-                    ? "bg-gold w-6"
-                    : "bg-foreground/30 hover:bg-foreground/50"
+                  ? "bg-gold w-6"
+                  : "bg-foreground/30 hover:bg-foreground/50"
                   }`}
               />
             ))}
@@ -98,12 +118,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
           className={`absolute inset-x-4 bottom-4 flex gap-2 transition-all duration-300 ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
         >
-          <Button variant="glass" size="lg" className="flex-1" onClick={handleAddToCart}>
-            <ShoppingBag className="w-4 h-4" />
-            Add to Cart
+          <Button variant="glass" size="sm" className="flex-1" onClick={handleAddToCart}>
+            <ShoppingBag className="w-4 h-4 mr-2" />
+            Add
           </Button>
-          <Button variant="glass" size="icon" className="h-12 w-12">
-            <Eye className="w-5 h-5" />
+          <Button variant="gold" size="sm" className="flex-1" onClick={handleBuyNow}>
+            Buy Now
           </Button>
         </div>
       </div>
@@ -126,8 +146,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <Star
                 key={i}
                 className={`w-4 h-4 ${i < Math.floor(product.rating)
-                    ? "fill-gold text-gold"
-                    : "text-muted-foreground"
+                  ? "fill-gold text-gold"
+                  : "text-muted-foreground"
                   }`}
               />
             ))}

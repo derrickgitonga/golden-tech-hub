@@ -3,7 +3,7 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { CreditCard, Smartphone, Loader2, CheckCircle2 } from "lucide-react";
+import { CreditCard, Smartphone, Loader2, CheckCircle2, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -17,6 +17,7 @@ const Checkout = () => {
     const [isSuccess, setIsSuccess] = useState(false);
 
     // Form states
+    const [email, setEmail] = useState("");
     const [mpesaNumber, setMpesaNumber] = useState("");
     const [cardNumber, setCardNumber] = useState("");
     const [cardExpiry, setCardExpiry] = useState("");
@@ -34,7 +35,15 @@ const Checkout = () => {
                 const productName = items.map(i => i.name).join(", ");
                 const accountRef = productName.length > 12 ? productName.substring(0, 12) : productName;
 
-                toast.info(`Sending STK Push to ${mpesaNumber}...`, {
+                // Format phone number to 254...
+                let formattedPhone = mpesaNumber.replace(/\D/g, ''); // Remove non-digits
+                if (formattedPhone.startsWith('0')) {
+                    formattedPhone = '254' + formattedPhone.substring(1);
+                } else if (formattedPhone.startsWith('7') || formattedPhone.startsWith('1')) {
+                    formattedPhone = '254' + formattedPhone;
+                }
+
+                toast.info(`Sending STK Push to ${formattedPhone}...`, {
                     description: `Amount: KES ${kshAmount.toLocaleString()} for ${accountRef}`,
                 });
 
@@ -44,17 +53,20 @@ const Checkout = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        phoneNumber: mpesaNumber,
+                        phoneNumber: formattedPhone,
                         amount: kshAmount,
                         accountReference: accountRef,
-                        transactionDesc: "BackMarket"
+                        transactionDesc: "BackMarket Traders"
                     }),
                 });
 
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || 'Failed to initiate STK Push');
+                    const errorMessage = data.details
+                        ? `${data.error}: ${JSON.stringify(data.details)}`
+                        : (data.error || 'Failed to initiate STK Push');
+                    throw new Error(errorMessage);
                 }
 
                 if (data.ResponseCode === "0") {
@@ -72,8 +84,8 @@ const Checkout = () => {
 
             } catch (error) {
                 console.error(error);
-                toast.error("Payment Failed", {
-                    description: error instanceof Error ? error.message : "Could not initiate M-Pesa payment.",
+                toast.error("M-Pesa Payment Failed", {
+                    description: error instanceof Error ? error.message : "Could not initiate M-Pesa payment. Please try Card payment instead.",
                 });
                 setIsProcessing(false);
                 return;
@@ -83,17 +95,37 @@ const Checkout = () => {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
 
+        // Send confirmation email
+        try {
+            await fetch('http://localhost:3000/api/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    items,
+                    total: totalPrice,
+                    orderId: Math.floor(Math.random() * 1000000).toString(),
+                    paymentMethod: paymentMethod === "mpesa" ? "M-Pesa" : "Card"
+                }),
+            });
+        } catch (error) {
+            console.error("Failed to send email:", error);
+            // Don't block success UI if email fails
+        }
+
         setIsProcessing(false);
         setIsSuccess(true);
         clearCart();
         toast.success("Payment successful!", {
-            description: "Your order has been placed.",
+            description: "Your order has been placed and a confirmation email sent.",
         });
 
         // Redirect home after a delay
         setTimeout(() => {
             navigate("/");
-        }, 3000);
+        }, 5000);
     };
 
     if (items.length === 0 && !isSuccess) {
@@ -141,6 +173,28 @@ const Checkout = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Payment Section */}
                     <div className="lg:col-span-2 space-y-6">
+                        {/* Contact Information */}
+                        <div className="bg-card border border-border rounded-xl p-6">
+                            <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+                                <Mail className="w-5 h-5 text-gold" />
+                                Contact Information
+                            </h2>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Email Address</label>
+                                <input
+                                    type="email"
+                                    placeholder="your@email.com"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    We'll send your order confirmation and receipts to this email.
+                                </p>
+                            </div>
+                        </div>
+
                         <div className="bg-card border border-border rounded-xl p-6">
                             <h2 className="text-xl font-semibold mb-6">Payment Method</h2>
 

@@ -5,6 +5,7 @@ import CategoriesSection from "@/components/CategoriesSection";
 import TrendingSection from "@/components/TrendingSection";
 import GoogleSection from "@/components/GoogleSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import StatsSection from "@/components/StatsSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -13,11 +14,12 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
-        <TrustSection />
-        <CategoriesSection />
         <TrendingSection />
         <GoogleSection />
         <TestimonialsSection />
+        <CategoriesSection />
+        <StatsSection />
+        <TrustSection />
       </main>
       <Footer />
     </div>
