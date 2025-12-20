@@ -12,9 +12,9 @@ import Admin from "./pages/Admin";
 import CategoryPage from "./pages/CategoryPage";
 import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation";
 import CartDrawer from "./components/CartDrawer";
 import ErrorBoundary from "./components/ErrorBoundary";
-
 import ComingSoon from "./pages/ComingSoon";
 
 const queryClient = new QueryClient();
@@ -36,6 +36,7 @@ const App = () => (
                 <Route path="/category/:category" element={<CategoryPage />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
                 <Route path="/coming-soon" element={<ComingSoon />} />
                 <Route path="/search" element={<CategoryPage />} />
               </Routes>

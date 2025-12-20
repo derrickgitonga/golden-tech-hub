@@ -1,16 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProducts, Product } from "@/contexts/ProductContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Trash2, Plus, X } from "lucide-react";
+import { Trash2, Plus, X, Package, Truck, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/lib/supabase";
+
+interface Order {
+    id: number;
+    created_at: string;
+    customer_email: string;
+    total_amount: number;
+    status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+    items: any[];
+    payment_method: string;
+}
 
 const Admin = () => {
     const { products, addProduct, deleteProduct } = useProducts();
+    const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [loadingOrders, setLoadingOrders] = useState(false);
+
     const [formData, setFormData] = useState({
         name: "",
         brand: "",
@@ -24,6 +39,63 @@ const Admin = () => {
         description: "",
         features: [""] as string[],
     });
+
+    useEffect(() => {
+        if (activeTab === 'orders') {
+            fetchOrders();
+        }
+    }, [activeTab]);
+
+    const fetchOrders = async () => {
+        setLoadingOrders(true);
+        try {
+            const { data, error } = await supabase
+                .from('orders')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setOrders(data || []);
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+            toast.error("Failed to fetch orders");
+        } finally {
+            setLoadingOrders(false);
+        }
+    };
+
+    const updateOrderStatus = async (orderId: number, newStatus: Order['status'], customerEmail: string) => {
+        try {
+            const { error } = await supabase
+                .from('orders')
+                .update({ status: newStatus })
+                .eq('id', orderId);
+
+            if (error) throw error;
+
+            setOrders(prev => prev.map(order =>
+                order.id === orderId ? { ...order, status: newStatus } : order
+            ));
+
+            toast.success(`Order #${orderId} status updated to ${newStatus}`);
+
+            // Send status update email
+            await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'status_update',
+                    email: customerEmail,
+                    orderId: orderId.toString(),
+                    status: newStatus
+                })
+            });
+
+        } catch (error) {
+            console.error("Error updating status:", error);
+            toast.error("Failed to update order status");
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -123,249 +195,281 @@ const Admin = () => {
         }));
     };
 
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'pending': return 'bg-yellow-100 text-yellow-800';
+            case 'processing': return 'bg-blue-100 text-blue-800';
+            case 'shipped': return 'bg-purple-100 text-purple-800';
+            case 'delivered': return 'bg-green-100 text-green-800';
+            case 'cancelled': return 'bg-red-100 text-red-800';
+            default: return 'bg-gray-100 text-gray-800';
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background">
             <Header />
             <main className="pt-24 pb-16 container mx-auto px-4">
-                <div className="max-w-2xl mx-auto">
-                    <h1 className="font-display text-4xl font-light text-foreground mb-8">
-                        Admin <span className="text-gradient-gold">Dashboard</span>
-                    </h1>
-
-                    <div className="bg-card border border-border rounded-xl p-8">
-                        <h2 className="text-xl font-semibold mb-6">Add New Product</h2>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="name">Product Name *</Label>
-                                    <Input
-                                        id="name"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        placeholder="e.g. iPhone 15 Pro"
-                                        required
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="brand">Brand *</Label>
-                                    <Input
-                                        id="brand"
-                                        name="brand"
-                                        value={formData.brand}
-                                        onChange={handleChange}
-                                        placeholder="e.g. Apple"
-                                        required
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="price">Price ($) *</Label>
-                                    <Input
-                                        id="price"
-                                        name="price"
-                                        type="number"
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        placeholder="999"
-                                        required
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="originalPrice">Original Price ($)</Label>
-                                    <Input
-                                        id="originalPrice"
-                                        name="originalPrice"
-                                        type="number"
-                                        value={formData.originalPrice}
-                                        onChange={handleChange}
-                                        placeholder="1099"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="category">Category</Label>
-                                    <select
-                                        id="category"
-                                        name="category"
-                                        value={formData.category}
-                                        onChange={handleChange}
-                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    >
-                                        <option value="smartphones">Smartphones</option>
-                                        <option value="laptops">Laptops</option>
-                                        <option value="audio">Audio</option>
-                                        <option value="wearables">Wearables</option>
-                                        <option value="accessories">Accessories</option>
-                                        <option value="tablets">Tablets</option>
-                                    </select>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="rating">Rating (0-5)</Label>
-                                    <Input
-                                        id="rating"
-                                        name="rating"
-                                        type="number"
-                                        min="0"
-                                        max="5"
-                                        step="0.1"
-                                        value={formData.rating}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="reviews">Review Count</Label>
-                                    <Input
-                                        id="reviews"
-                                        name="reviews"
-                                        type="number"
-                                        value={formData.reviews}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="badge">Badge (Optional)</Label>
-                                    <Input
-                                        id="badge"
-                                        name="badge"
-                                        value={formData.badge}
-                                        onChange={handleChange}
-                                        placeholder="e.g. Bestseller"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>Product Images *</Label>
-                                <div className="space-y-3">
-                                    {formData.imageUrls.map((url, index) => (
-                                        <div key={index} className="flex gap-2">
-                                            <Input
-                                                value={url}
-                                                onChange={(e) => handleImageChange(index, e.target.value)}
-                                                placeholder={`Image URL ${index + 1}`}
-                                                required={index === 0}
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                onClick={() => removeImageField(index)}
-                                                className="shrink-0"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    ))}
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={addImageField}
-                                        className="w-full"
-                                    >
-                                        <Plus className="w-4 h-4 mr-2" />
-                                        Add Another Image
-                                    </Button>
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea
-                                    id="description"
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                    placeholder="Enter product description..."
-                                    className="min-h-[100px]"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>Product Features</Label>
-                                <div className="space-y-3">
-                                    {formData.features.map((feature, index) => (
-                                        <div key={index} className="flex gap-2">
-                                            <Input
-                                                value={feature}
-                                                onChange={(e) => handleFeatureChange(index, e.target.value)}
-                                                placeholder={`Feature ${index + 1}`}
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                onClick={() => removeFeatureField(index)}
-                                                className="shrink-0"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    ))}
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={addFeatureField}
-                                        className="w-full"
-                                    >
-                                        <Plus className="w-4 h-4 mr-2" />
-                                        Add Another Feature
-                                    </Button>
-                                </div>
-                            </div>
-
-                            <Button type="submit" variant="gold" className="w-full">
-                                Add Product
+                <div className="max-w-6xl mx-auto">
+                    <div className="flex justify-between items-center mb-8">
+                        <h1 className="font-display text-4xl font-light text-foreground">
+                            Admin <span className="text-gradient-gold">Dashboard</span>
+                        </h1>
+                        <div className="flex gap-4">
+                            <Button
+                                variant={activeTab === 'products' ? 'gold' : 'outline'}
+                                onClick={() => setActiveTab('products')}
+                            >
+                                Products
                             </Button>
-                        </form>
+                            <Button
+                                variant={activeTab === 'orders' ? 'gold' : 'outline'}
+                                onClick={() => setActiveTab('orders')}
+                            >
+                                Orders
+                            </Button>
+                        </div>
                     </div>
 
-                    <div className="mt-12">
-                        <h2 className="text-2xl font-light text-foreground mb-6">Manage Products</h2>
+                    {activeTab === 'products' ? (
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-1">
+                                <div className="bg-card border border-border rounded-xl p-8 sticky top-24">
+                                    <h2 className="text-xl font-semibold mb-6">Add New Product</h2>
+                                    <form onSubmit={handleSubmit} className="space-y-6">
+                                        <div className="space-y-4">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="name">Product Name *</Label>
+                                                <Input
+                                                    id="name"
+                                                    name="name"
+                                                    value={formData.name}
+                                                    onChange={handleChange}
+                                                    placeholder="e.g. iPhone 15 Pro"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="brand">Brand *</Label>
+                                                <Input
+                                                    id="brand"
+                                                    name="brand"
+                                                    value={formData.brand}
+                                                    onChange={handleChange}
+                                                    placeholder="e.g. Apple"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="price">Price ($) *</Label>
+                                                    <Input
+                                                        id="price"
+                                                        name="price"
+                                                        type="number"
+                                                        value={formData.price}
+                                                        onChange={handleChange}
+                                                        placeholder="999"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="originalPrice">Original ($)</Label>
+                                                    <Input
+                                                        id="originalPrice"
+                                                        name="originalPrice"
+                                                        type="number"
+                                                        value={formData.originalPrice}
+                                                        onChange={handleChange}
+                                                        placeholder="1099"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="category">Category</Label>
+                                                <select
+                                                    id="category"
+                                                    name="category"
+                                                    value={formData.category}
+                                                    onChange={handleChange}
+                                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                                >
+                                                    <option value="smartphones">Smartphones</option>
+                                                    <option value="laptops">Laptops</option>
+                                                    <option value="audio">Audio</option>
+                                                    <option value="wearables">Wearables</option>
+                                                    <option value="accessories">Accessories</option>
+                                                    <option value="tablets">Tablets</option>
+                                                </select>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label>Images *</Label>
+                                                <div className="space-y-2">
+                                                    {formData.imageUrls.map((url, index) => (
+                                                        <div key={index} className="flex gap-2">
+                                                            <Input
+                                                                value={url}
+                                                                onChange={(e) => handleImageChange(index, e.target.value)}
+                                                                placeholder="Image URL"
+                                                                required={index === 0}
+                                                            />
+                                                            <Button
+                                                                type="button"
+                                                                variant="outline"
+                                                                size="icon"
+                                                                onClick={() => removeImageField(index)}
+                                                            >
+                                                                <X className="w-4 h-4" />
+                                                            </Button>
+                                                        </div>
+                                                    ))}
+                                                    <Button type="button" variant="outline" size="sm" onClick={addImageField} className="w-full">
+                                                        <Plus className="w-4 h-4 mr-2" /> Add Image
+                                                    </Button>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="description">Description</Label>
+                                                <Textarea
+                                                    id="description"
+                                                    name="description"
+                                                    value={formData.description}
+                                                    onChange={handleChange}
+                                                    placeholder="Product description..."
+                                                    className="min-h-[80px]"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <Button type="submit" variant="gold" className="w-full">
+                                            Add Product
+                                        </Button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div className="lg:col-span-2">
+                                <div className="bg-card border border-border rounded-xl overflow-hidden">
+                                    <div className="p-6 border-b border-border">
+                                        <h2 className="text-xl font-semibold">Manage Products</h2>
+                                    </div>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left">
+                                            <thead className="bg-secondary/50 border-b border-border">
+                                                <tr>
+                                                    <th className="p-4 font-medium text-muted-foreground">Product</th>
+                                                    <th className="p-4 font-medium text-muted-foreground">Price</th>
+                                                    <th className="p-4 font-medium text-muted-foreground">Category</th>
+                                                    <th className="p-4 font-medium text-muted-foreground text-right">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-border">
+                                                {products.map((product) => (
+                                                    <tr key={product.id} className="hover:bg-secondary/30 transition-colors">
+                                                        <td className="p-4">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-10 h-10 rounded-md overflow-hidden bg-background border border-border">
+                                                                    <img
+                                                                        src={product.images[0]}
+                                                                        alt={product.name}
+                                                                        className="w-full h-full object-cover"
+                                                                    />
+                                                                </div>
+                                                                <div className="flex flex-col">
+                                                                    <span className="font-medium">{product.name}</span>
+                                                                    <span className="text-xs text-muted-foreground">{product.brand}</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="p-4 font-medium">${product.price}</td>
+                                                        <td className="p-4 text-muted-foreground capitalize">{product.category || "-"}</td>
+                                                        <td className="p-4 text-right">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                                onClick={() => handleDelete(product.id)}
+                                                            >
+                                                                <Trash2 className="w-4 h-4" />
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                {products.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan={4} className="p-8 text-center text-muted-foreground">
+                                                            No products found.
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
                         <div className="bg-card border border-border rounded-xl overflow-hidden">
+                            <div className="p-6 border-b border-border flex justify-between items-center">
+                                <h2 className="text-xl font-semibold">Customer Orders</h2>
+                                <Button variant="outline" size="sm" onClick={fetchOrders} disabled={loadingOrders}>
+                                    Refresh
+                                </Button>
+                            </div>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left">
                                     <thead className="bg-secondary/50 border-b border-border">
                                         <tr>
-                                            <th className="p-4 font-medium text-muted-foreground">Product</th>
-                                            <th className="p-4 font-medium text-muted-foreground">Brand</th>
-                                            <th className="p-4 font-medium text-muted-foreground">Price</th>
-                                            <th className="p-4 font-medium text-muted-foreground">Category</th>
+                                            <th className="p-4 font-medium text-muted-foreground">Order ID</th>
+                                            <th className="p-4 font-medium text-muted-foreground">Date</th>
+                                            <th className="p-4 font-medium text-muted-foreground">Customer</th>
+                                            <th className="p-4 font-medium text-muted-foreground">Total</th>
+                                            <th className="p-4 font-medium text-muted-foreground">Status</th>
                                             <th className="p-4 font-medium text-muted-foreground text-right">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-border">
-                                        {products.map((product) => (
-                                            <tr key={product.id} className="hover:bg-secondary/30 transition-colors">
+                                        {orders.map((order) => (
+                                            <tr key={order.id} className="hover:bg-secondary/30 transition-colors">
+                                                <td className="p-4 font-mono text-sm">#{order.id}</td>
+                                                <td className="p-4 text-sm text-muted-foreground">
+                                                    {new Date(order.created_at).toLocaleDateString()}
+                                                </td>
                                                 <td className="p-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-md overflow-hidden bg-background border border-border">
-                                                            <img
-                                                                src={product.images[0]}
-                                                                alt={product.name}
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        </div>
-                                                        <span className="font-medium">{product.name}</span>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-medium">{order.customer_email}</span>
+                                                        <span className="text-xs text-muted-foreground">{order.payment_method}</span>
                                                     </div>
                                                 </td>
-                                                <td className="p-4 text-muted-foreground">{product.brand}</td>
-                                                <td className="p-4 font-medium">${product.price}</td>
-                                                <td className="p-4 text-muted-foreground capitalize">{product.category || "-"}</td>
+                                                <td className="p-4 font-medium">${order.total_amount.toLocaleString()}</td>
+                                                <td className="p-4">
+                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                                                        {order.status}
+                                                    </span>
+                                                </td>
                                                 <td className="p-4 text-right">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                                        onClick={() => handleDelete(product.id)}
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </Button>
+                                                    <div className="flex justify-end gap-2">
+                                                        <select
+                                                            className="h-8 rounded-md border border-input bg-background px-2 text-xs"
+                                                            value={order.status}
+                                                            onChange={(e) => updateOrderStatus(order.id, e.target.value as any, order.customer_email)}
+                                                        >
+                                                            <option value="pending">Pending</option>
+                                                            <option value="processing">Processing</option>
+                                                            <option value="shipped">Shipped</option>
+                                                            <option value="delivered">Delivered</option>
+                                                            <option value="cancelled">Cancelled</option>
+                                                        </select>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
-                                        {products.length === 0 && (
+                                        {orders.length === 0 && (
                                             <tr>
-                                                <td colSpan={5} className="p-8 text-center text-muted-foreground">
-                                                    No products found. Add one above!
+                                                <td colSpan={6} className="p-12 text-center text-muted-foreground">
+                                                    {loadingOrders ? "Loading orders..." : "No orders found yet."}
                                                 </td>
                                             </tr>
                                         )}
@@ -373,7 +477,7 @@ const Admin = () => {
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </main>
             <Footer />

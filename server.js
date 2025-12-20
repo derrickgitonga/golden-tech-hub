@@ -4,6 +4,7 @@ import axios from 'axios';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import fs from 'fs';
+import { createClient } from '@supabase/supabase-js';
 
 dotenv.config();
 
@@ -94,22 +95,42 @@ app.post('/api/stkpush', getAccessToken, async (req, res) => {
 });
 
 // Send Email Endpoint
+// Send Email Endpoint
+// Send Email Endpoint
 app.post('/api/send-email', async (req, res) => {
-    const { email, items, total, orderId, paymentMethod } = req.body;
+    const { type, email, items, total, orderId, paymentMethod, status } = req.body;
 
-    const itemsHtml = items.map(item => `
-        <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
-            <p><strong>${item.name}</strong></p>
-            <p>Quantity: ${item.quantity}</p>
-            <p>Price: $${item.price.toLocaleString()}</p>
-        </div>
-    `).join('');
+    let subject = '';
+    let htmlContent = '';
 
-    const mailOptions = {
-        from: 'Golden Tech Hub <backmarket.assistant@gmail.com>',
-        to: email,
-        subject: `Order Confirmation #${orderId}`,
-        html: `
+    if (type === 'status_update') {
+        subject = `Order Status Update #${orderId}`;
+        htmlContent = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h1 style="color: #D4AF37;">Order Status Update</h1>
+                <p>Hello,</p>
+                <p>The status of your order <strong>#${orderId}</strong> has been updated to:</p>
+                
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+                    <h2 style="color: #333; text-transform: uppercase;">${status}</h2>
+                </div>
+                
+                <p>If you have any questions, please contact our support team.</p>
+                <p>Best regards,<br>Golden Tech Hub Team</p>
+            </div>
+        `;
+    } else {
+        // Default to Order Confirmation
+        subject = `Order Confirmation #${orderId}`;
+        const itemsHtml = items.map(item => `
+            <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                <p><strong>${item.name}</strong></p>
+                <p>Quantity: ${item.quantity}</p>
+                <p>Price: $${item.price.toLocaleString()}</p>
+            </div>
+        `).join('');
+
+        htmlContent = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h1 style="color: #D4AF37;">Order Confirmed!</h1>
                 <p>Thank you for your purchase. Here are your order details:</p>
@@ -128,7 +149,50 @@ app.post('/api/send-email', async (req, res) => {
                 <p>We will notify you when your order ships.</p>
                 <p>Best regards,<br>Golden Tech Hub Team</p>
             </div>
-        `
+        `;
+
+        // Send Admin Email
+        console.log('Attempting to send Admin Email...');
+        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+        const approveLink = `${baseUrl}/api/approve-order?orderId=${orderId}`;
+
+        const adminMailOptions = {
+            from: 'Golden Tech Hub <backmarket.assistant@gmail.com>',
+            to: 'backmarket.assistant@gmail.com', // Admin email
+            subject: `[ADMIN] New Order #${orderId}`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h1 style="color: #D4AF37;">New Order Received!</h1>
+                    <p>Order #${orderId} has been placed.</p>
+                    <p><strong>Total:</strong> $${total ? total.toLocaleString() : '0'}</p>
+                    <p><strong>Payment:</strong> ${paymentMethod}</p>
+                    
+                    <div style="margin: 30px 0; text-align: center;">
+                        <a href="${approveLink}" style="background-color: #4CAF50; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 4px; font-size: 16px;">
+                            Approve Order
+                        </a>
+                    </div>
+                    
+                    <p>Clicking approve will set status to "Approved, Shipping in progress".</p>
+                </div>
+            `
+        };
+
+        // Send admin email and log result
+        try {
+            await transporter.sendMail(adminMailOptions);
+            console.log('Admin Email Sent Successfully');
+        } catch (err) {
+            console.error('Admin Email Failed:', err);
+            logError('Admin Email Failed', err);
+        }
+    }
+
+    const mailOptions = {
+        from: 'Golden Tech Hub <backmarket.assistant@gmail.com>',
+        to: email,
+        subject: subject,
+        html: htmlContent
     };
 
     try {
@@ -137,6 +201,39 @@ app.post('/api/send-email', async (req, res) => {
     } catch (error) {
         logError('Email Error', error);
         res.status(500).json({ error: 'Failed to send email' });
+    }
+});
+
+// Approve Order Endpoint
+const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY);
+
+app.get('/api/approve-order', async (req, res) => {
+    const { orderId } = req.query;
+
+    if (!orderId) {
+        return res.status(400).send('Missing orderId');
+    }
+
+    try {
+        const { error } = await supabase
+            .from('orders')
+            .update({ status: 'Approved, Shipping in progress' })
+            .eq('id', orderId);
+
+        if (error) throw error;
+
+        res.send(`
+            < html >
+            <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+                <h1 style="color: green;">Order #${orderId} Approved!</h1>
+                <p>The status has been updated to "Approved, Shipping in progress".</p>
+                <p>You can close this window.</p>
+            </body>
+            </html >
+            `);
+    } catch (error) {
+        console.error('Error approving order:', error);
+        res.status(500).send('Failed to approve order');
     }
 });
 

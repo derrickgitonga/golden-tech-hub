@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -47,7 +48,7 @@ const Checkout = () => {
                     description: `Amount: KES ${kshAmount.toLocaleString()} for ${accountRef}`,
                 });
 
-                const response = await fetch('http://localhost:3000/api/stkpush', {
+                const response = await fetch('/api/stkpush', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -95,18 +96,48 @@ const Checkout = () => {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
 
+        // Save order to Supabase
+        let orderId = Math.floor(Math.random() * 1000000).toString();
+
+        try {
+            const { data: orderData, error: orderError } = await supabase
+                .from('orders')
+                .insert([
+                    {
+                        customer_email: email,
+                        customer_phone: mpesaNumber || null,
+                        total_amount: totalPrice,
+                        status: 'pending',
+                        items: items,
+                        payment_method: paymentMethod
+                    }
+                ])
+                .select()
+                .single();
+
+            if (orderError) {
+                console.error("Failed to save order:", orderError);
+                // We continue even if save fails, but log it. In production, we might want to halt or retry.
+            } else if (orderData) {
+                orderId = orderData.id.toString();
+            }
+        } catch (err) {
+            console.error("Error saving order:", err);
+        }
+
         // Send confirmation email
         try {
-            await fetch('http://localhost:3000/api/send-email', {
+            await fetch('/api/send-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    type: 'confirmation',
                     email,
                     items,
                     total: totalPrice,
-                    orderId: Math.floor(Math.random() * 1000000).toString(),
+                    orderId: orderId,
                     paymentMethod: paymentMethod === "mpesa" ? "M-Pesa" : "Card"
                 }),
             });
@@ -122,10 +153,20 @@ const Checkout = () => {
             description: "Your order has been placed and a confirmation email sent.",
         });
 
-        // Redirect home after a delay
+        // Redirect to order confirmation with state
+        const orderDetails = {
+            id: orderId,
+            created_at: new Date().toISOString(),
+            customer_email: email,
+            total_amount: totalPrice,
+            status: 'pending',
+            items: items,
+            payment_method: paymentMethod
+        };
+
         setTimeout(() => {
-            navigate("/");
-        }, 5000);
+            navigate(`/order-confirmation/${orderId}`, { state: { order: orderDetails } });
+        }, 1000);
     };
 
     if (items.length === 0 && !isSuccess) {
