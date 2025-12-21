@@ -129,12 +129,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </div>
 
       {/* Content */}
-      <div className="p-5">
+      <div className="p-3 md:p-5">
         <div className="text-xs text-gold font-medium uppercase tracking-wider mb-2">
           {product.brand}
         </div>
         <Link to={`/product/${product.id}`}>
-          <h3 className="font-display text-lg font-medium text-foreground mb-3 line-clamp-2 group-hover:text-gold transition-colors">
+          <h3 className="font-display text-sm md:text-lg font-medium text-foreground mb-2 md:mb-3 line-clamp-2 group-hover:text-gold transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -145,7 +145,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-4 h-4 ${i < Math.floor(product.rating)
+                className={`w-3 h-3 md:w-4 md:h-4 ${i < Math.floor(product.rating)
                   ? "fill-gold text-gold"
                   : "text-muted-foreground"
                   }`}
@@ -159,7 +159,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         {/* Price */}
         <div className="flex items-center gap-3">
-          <span className="font-display text-2xl font-semibold text-foreground">
+          <span className="font-display text-lg md:text-2xl font-semibold text-foreground">
             ${product.price.toLocaleString()}
           </span>
           {product.originalPrice && (

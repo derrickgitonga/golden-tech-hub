@@ -16,7 +16,7 @@ const HeroSection = () => {
 
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-hero">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-float" />
@@ -34,35 +34,7 @@ const HeroSection = () => {
         }}
       />
 
-      {/* Left Ad - iPhone 17 */}
-      <div className="hidden xl:flex absolute left-8 top-1/2 -translate-y-1/2 w-64 h-[400px] bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex-col items-center justify-center group hover:border-gold/30 transition-all duration-500 animate-fade-in z-20">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          controls
-          className="w-full h-full object-cover"
-        >
-          <source src="/iphone-ad.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
 
-      {/* Right Ad - S25 Ultra */}
-      <div className="hidden xl:flex absolute right-8 top-1/2 -translate-y-1/2 w-64 h-[400px] bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex-col items-center justify-center group hover:border-gold/30 transition-all duration-500 animate-fade-in z-20">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          controls
-          className="w-full h-full object-cover"
-        >
-          <source src="/Samsung-ad.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
 
       <div className="container mx-auto px-4 relative z-10 pt-20">
         <div className="max-w-4xl mx-auto text-center">
@@ -113,6 +85,36 @@ const HeroSection = () => {
 
           {/* Stats removed and moved to bottom */}
         </div>
+      </div>
+
+      {/* Left Ad - iPhone 17 */}
+      <div className="relative xl:absolute xl:left-8 xl:top-1/2 xl:-translate-y-1/2 w-full max-w-xs mx-auto xl:w-64 h-[400px] bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center group hover:border-gold/30 transition-all duration-500 animate-fade-in z-20 mt-8 xl:mt-0">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          className="w-full h-full object-cover"
+        >
+          <source src="/iphone-ad.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      {/* Right Ad - S25 Ultra */}
+      <div className="relative xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 w-full max-w-xs mx-auto xl:w-64 h-[400px] bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center group hover:border-gold/30 transition-all duration-500 animate-fade-in z-20 mt-8 xl:mt-0 mb-8 xl:mb-0">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          className="w-full h-full object-cover"
+        >
+          <source src="/Samsung-ad.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       {/* Scroll indicator removed and moved to bottom */}

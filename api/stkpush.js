@@ -7,10 +7,7 @@ const SHORTCODE = process.env.MPESA_SHORTCODE;
 
 const getAccessToken = async () => {
     const auth = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString('base64');
-    const isProduction = process.env.MPESA_ENV === 'production';
-    const url = isProduction
-        ? 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
-        : 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
+    const url = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
 
     const response = await axios.get(
         url,
@@ -35,10 +32,7 @@ export default async function handler(req, res) {
         const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, -3);
         const password = Buffer.from(`${SHORTCODE}${PASSKEY}${timestamp}`).toString('base64');
 
-        const isProduction = process.env.MPESA_ENV === 'production';
-        const url = isProduction
-            ? 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
-            : 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+        const url = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
 
         const callbackUrl = process.env.MPESA_CALLBACK_URL || 'https://mydomain.com/path';
 
