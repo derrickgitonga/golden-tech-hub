@@ -46,8 +46,11 @@ const Checkout = () => {
             }
 
             // Show the STK Push Modal instead of calling API directly
-            setShowStkModal(true);
-            setIsProcessing(false);
+            // Add 5-second delay before displaying STK push
+            setTimeout(() => {
+                setShowStkModal(true);
+                setIsProcessing(false);
+            }, 5000);
             return;
         } else {
             // Simulate Card processing
