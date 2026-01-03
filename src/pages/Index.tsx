@@ -8,6 +8,8 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import StatsSection from "@/components/StatsSection";
 import Footer from "@/components/Footer";
 
+import SamsungAd from "@/components/SamsungAd";
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
@@ -15,6 +17,9 @@ const Index = () => {
       <main>
         <HeroSection />
         <TrendingSection />
+        <div className="xl:hidden py-8">
+          <SamsungAd />
+        </div>
         <GoogleSection />
         <TestimonialsSection />
         <CategoriesSection />

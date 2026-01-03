@@ -2,6 +2,9 @@ import { Search, Sparkles, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import PhoneCarousel3D from "./PhoneCarousel3D";
+import RotatingPhoneNames from "./RotatingPhoneNames";
+import SamsungAd from "./SamsungAd";
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,15 +16,13 @@ const HeroSection = () => {
     }
   };
 
-
-
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-hero">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold/3 rounded-full blur-3xl animate-float" style={{ animationDelay: "-3s" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-gold/10 rounded-full" />
+        <RotatingPhoneNames />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-gold/5 rounded-full" />
       </div>
 
@@ -33,8 +34,6 @@ const HeroSection = () => {
           backgroundSize: "100px 100px",
         }}
       />
-
-
 
       <div className="container mx-auto px-4 relative z-10 pt-20">
         <div className="max-w-4xl mx-auto text-center">
@@ -81,9 +80,8 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Suggestions removed */}
-
-          {/* Stats removed and moved to bottom */}
+          {/* 3D Phone Carousel for Mobile */}
+          <PhoneCarousel3D />
         </div>
       </div>
 
@@ -103,21 +101,7 @@ const HeroSection = () => {
       </div>
 
       {/* Right Ad - S25 Ultra */}
-      <div className="relative xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 w-full max-w-xs mx-auto xl:w-64 h-[400px] bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center group hover:border-gold/30 transition-all duration-500 animate-fade-in z-20 mt-8 xl:mt-0 mb-8 xl:mb-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          controls
-          className="w-full h-full object-cover"
-        >
-          <source src="/Samsung-ad.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-
-      {/* Scroll indicator removed and moved to bottom */}
+      <SamsungAd className="hidden xl:flex xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 mt-8 xl:mt-0 mb-8 xl:mb-0" />
     </section>
   );
 };

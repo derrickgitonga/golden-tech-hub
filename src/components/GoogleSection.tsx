@@ -28,7 +28,7 @@ const GoogleSection = () => {
                 </div>
 
                 {/* Product Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
                     {googleProducts.map((product, index) => (
                         <div
                             key={product.id}
