@@ -21,6 +21,7 @@ const Checkout = () => {
 
     // Form states
     const [email, setEmail] = useState("");
+    const [address, setAddress] = useState("");
     const [mpesaNumber, setMpesaNumber] = useState("");
     const [cardNumber, setCardNumber] = useState("");
     const [cardExpiry, setCardExpiry] = useState("");
@@ -114,6 +115,7 @@ const Checkout = () => {
                 body: JSON.stringify({
                     type: 'confirmation',
                     email,
+                    address,
                     items,
                     total: totalPrice,
                     orderId: orderId,
@@ -212,6 +214,17 @@ const Checkout = () => {
                                 <p className="text-xs text-muted-foreground">
                                     We'll send your order confirmation and receipts to this email.
                                 </p>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Delivery Address</label>
+                                <input
+                                    type="text"
+                                    placeholder="Enter your delivery address"
+                                    required
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                    className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
+                                />
                             </div>
                         </div>
 

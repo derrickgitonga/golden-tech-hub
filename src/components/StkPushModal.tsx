@@ -106,7 +106,7 @@ const StkPushModal: React.FC<StkPushModalProps> = ({
                         disabled={isLoading}
                         className="flex-1 h-11 bg-gray-700 hover:bg-gray-600 text-white border-gray-600 hover:border-gray-500 rounded-md font-medium"
                     >
-                        Cancel3445
+                        Cancel
                     </Button>
                     <Button
                         type="button"

@@ -17,6 +17,8 @@ import CartDrawer from "./components/CartDrawer";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ComingSoon from "./pages/ComingSoon";
 
+import ScrollToTop from "./components/ScrollToTop";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -28,6 +30,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              <ScrollToTop />
               <CartDrawer />
               <Routes>
                 <Route path="/" element={<Index />} />

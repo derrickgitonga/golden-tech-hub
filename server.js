@@ -104,7 +104,7 @@ app.post('/api/stkpush', getAccessToken, async (req, res) => {
 // Send Email Endpoint
 // Send Email Endpoint
 app.post('/api/send-email', async (req, res) => {
-    const { type, email, items, total, orderId, paymentMethod, status } = req.body;
+    const { type, email, address, items, total, orderId, paymentMethod, status } = req.body;
 
     let subject = '';
     let htmlContent = '';
@@ -129,12 +129,16 @@ app.post('/api/send-email', async (req, res) => {
         // Default to Order Confirmation
         subject = `Order Confirmation #${orderId}`;
         const itemsHtml = items.map(item => `
-            <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
-                <p><strong>${item.name}</strong></p>
-                <p>Quantity: ${item.quantity}</p>
-                <p>Price: $${item.price.toLocaleString()}</p>
+            <div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; align-items: center; gap: 15px;">
+                <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />
+                <div>
+                    <p style="margin: 0 0 5px 0;"><strong>${item.name}</strong></p>
+                    <p style="margin: 0; color: #666;">Qty: ${item.quantity} | Price: $${item.price.toLocaleString()}</p>
+                </div>
             </div>
         `).join('');
+
+        const productNames = items.map(i => i.name).join(", ");
 
         htmlContent = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -144,12 +148,19 @@ app.post('/api/send-email', async (req, res) => {
                 <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
                     <h3>Order #${orderId}</h3>
                     <p>Payment Method: ${paymentMethod}</p>
+                    <p><strong>Delivery Address:</strong> ${address || 'Not provided'}</p>
                     <div style="margin-top: 20px;">
                         ${itemsHtml}
                     </div>
                     <div style="border-top: 2px solid #D4AF37; margin-top: 20px; padding-top: 10px;">
                         <h3>Total: $${total.toLocaleString()}</h3>
                     </div>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #4caf50;">
+                    <p style="font-size: 16px; line-height: 1.5;">
+                        Your product <strong>${productNames}</strong> Disbursement is in progress and shipping to <strong>${address || 'your address'}</strong> will be done in 15 days. 😊
+                    </p>
                 </div>
                 
                 <p>We will notify you when your order ships.</p>
