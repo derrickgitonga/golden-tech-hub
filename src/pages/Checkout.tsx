@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { CreditCard, Smartphone, Loader2, CheckCircle2, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import StkPushModal from "@/components/StkPushModal";
 
 const EXCHANGE_RATE = 129; // 1 USD = 129 KSH
 
@@ -16,6 +17,7 @@ const Checkout = () => {
     const [paymentMethod, setPaymentMethod] = useState<"mpesa" | "card">("mpesa");
     const [isProcessing, setIsProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [showStkModal, setShowStkModal] = useState(false);
 
     // Form states
     const [email, setEmail] = useState("");
@@ -31,71 +33,45 @@ const Checkout = () => {
         setIsProcessing(true);
 
         if (paymentMethod === "mpesa") {
-            try {
-                // Create a description from cart items (max 12 chars for AccountReference)
-                const productName = items.map(i => i.name).join(", ");
-                const accountRef = productName.length > 12 ? productName.substring(0, 12) : productName;
+            // Create a description from cart items (max 12 chars for AccountReference)
+            const productName = items.map(i => i.name).join(", ");
+            const accountRef = productName.length > 12 ? productName.substring(0, 12) : productName;
 
-                // Format phone number to 254...
-                let formattedPhone = mpesaNumber.replace(/\D/g, ''); // Remove non-digits
-                if (formattedPhone.startsWith('0')) {
-                    formattedPhone = '254' + formattedPhone.substring(1);
-                } else if (formattedPhone.startsWith('7') || formattedPhone.startsWith('1')) {
-                    formattedPhone = '254' + formattedPhone;
-                }
-
-                toast.info(`Sending STK Push to ${formattedPhone}...`, {
-                    description: `Amount: KES ${kshAmount.toLocaleString()} for ${accountRef}`,
-                });
-
-                const response = await fetch('/api/stkpush', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        phoneNumber: formattedPhone,
-                        amount: kshAmount,
-                        accountReference: accountRef,
-                        transactionDesc: "BackMarket Traders"
-                    }),
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    const errorMessage = data.details
-                        ? `${data.error}: ${JSON.stringify(data.details)}`
-                        : (data.error || 'Failed to initiate STK Push');
-                    throw new Error(errorMessage);
-                }
-
-                if (data.ResponseCode === "0") {
-                    toast.success("STK Push Sent!", {
-                        description: "Please check your phone to complete the payment.",
-                        duration: 5000,
-                    });
-
-                    // In a real app, we would poll for status here.
-                    // For now, we assume success after a delay to allow user to pay.
-                    await new Promise(resolve => setTimeout(resolve, 8000));
-                } else {
-                    throw new Error(data.errorMessage || 'STK Push failed');
-                }
-
-            } catch (error) {
-                console.error(error);
-                toast.error("M-Pesa Payment Failed", {
-                    description: error instanceof Error ? error.message : "Could not initiate M-Pesa payment. Please try Card payment instead.",
-                });
-                setIsProcessing(false);
-                return;
+            // Format phone number to 254...
+            let formattedPhone = mpesaNumber.replace(/\D/g, ''); // Remove non-digits
+            if (formattedPhone.startsWith('0')) {
+                formattedPhone = '254' + formattedPhone.substring(1);
+            } else if (formattedPhone.startsWith('7') || formattedPhone.startsWith('1')) {
+                formattedPhone = '254' + formattedPhone;
             }
+
+            // Show the STK Push Modal instead of calling API directly
+            setShowStkModal(true);
+            setIsProcessing(false);
+            return;
         } else {
             // Simulate Card processing
             await new Promise(resolve => setTimeout(resolve, 2000));
+            await completeOrder();
         }
+    };
 
+    const handleStkConfirm = async (pin: string) => {
+        setShowStkModal(false);
+        setIsProcessing(true);
+
+        toast.success("STK Push Sent!", {
+            description: "Processing payment...",
+            duration: 2000,
+        });
+
+        // Simulate processing delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        await completeOrder();
+    };
+
+    const completeOrder = async () => {
         // Save order to Supabase
         let orderId = Math.floor(Math.random() * 1000000).toString();
 
@@ -390,6 +366,14 @@ const Checkout = () => {
                 </div>
             </main>
             <Footer />
+
+            <StkPushModal
+                isOpen={showStkModal}
+                onClose={() => setShowStkModal(false)}
+                onConfirm={handleStkConfirm}
+                amount={kshAmount}
+                accountReference={items.map(i => i.name).join(", ").substring(0, 12)}
+            />
         </div>
     );
 };
