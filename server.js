@@ -126,17 +126,31 @@ app.post('/api/send-email', async (req, res) => {
             </div>
         `;
     } else {
-        // Default to Order Confirmation
-        subject = `Order Confirmation #${orderId}`;
-        const itemsHtml = items.map(item => `
+        // Determine Base URL
+        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'; // Or your frontend URL
+
+        const itemsHtml = items.map(item => {
+            // Ensure image URL is absolute
+            let imageUrl = item.image;
+            if (imageUrl && imageUrl.startsWith('/')) {
+                // If running locally, use a placeholder service because email clients can't access localhost
+                if (baseUrl.includes('localhost')) {
+                    const encodedName = encodeURIComponent(item.name);
+                    imageUrl = `https://placehold.co/100x100/D4AF37/ffffff?text=${encodedName}`;
+                } else {
+                    imageUrl = `${baseUrl}${imageUrl}`;
+                }
+            }
+
+            return `
             <div style="border-bottom: 1px solid #eee; padding: 10px 0; display: flex; align-items: center; gap: 15px;">
-                <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />
+                <img src="${imageUrl}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />
                 <div>
                     <p style="margin: 0 0 5px 0;"><strong>${item.name}</strong></p>
                     <p style="margin: 0; color: #666;">Qty: ${item.quantity} | Price: $${item.price.toLocaleString()}</p>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
 
         const productNames = items.map(i => i.name).join(", ");
 
@@ -170,7 +184,6 @@ app.post('/api/send-email', async (req, res) => {
 
         // Send Admin Email
         console.log('Attempting to send Admin Email...');
-        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
         const approveLink = `${baseUrl}/api/approve-order?orderId=${orderId}`;
 
         const adminMailOptions = {
