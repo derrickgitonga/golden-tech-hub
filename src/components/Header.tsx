@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Search, ShoppingBag, User, Menu, X, LogOut } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, LogOut, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
@@ -103,7 +103,17 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
-              <div className="pt-4 border-t border-border">
+              <div className="pt-4 border-t border-border space-y-3">
+                {user && (
+                  <Link
+                    to="/orders"
+                    className="flex items-center gap-2 text-foreground hover:text-gold transition-colors py-2 px-1"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <History className="w-4 h-4" />
+                    Order History
+                  </Link>
+                )}
                 {user ? (
                   <Button variant="gold-outline" className="w-full" onClick={handleSignOut}>
                     <LogOut className="w-4 h-4 mr-2" />

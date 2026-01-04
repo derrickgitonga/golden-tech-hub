@@ -235,7 +235,10 @@ app.post('/api/send-email', async (req, res) => {
 });
 
 // Approve Order Endpoint
-const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY);
+// Approve Order Endpoint
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.get('/api/approve-order', async (req, res) => {
     const { orderId } = req.query;
@@ -245,25 +248,51 @@ app.get('/api/approve-order', async (req, res) => {
     }
 
     try {
-        const { error } = await supabase
+        // 1. Fetch order details to get customer email
+        const { data: order, error: fetchError } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('id', orderId)
+            .single();
+
+        if (fetchError) throw fetchError;
+        if (!order) throw new Error('Order not found');
+
+        // 2. Update order status
+        const { error: updateError } = await supabase
             .from('orders')
             .update({ status: 'Approved, Shipping in progress' })
             .eq('id', orderId);
 
-        if (error) throw error;
+        if (updateError) throw updateError;
+
+        // 3. Send notification email to customer
+        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+
+        // Use placeholder for localhost if needed, similar to confirmation email
+        // But here we might not have the full items list with images easily accessible unless we parse it from the order
+        // For status update, we'll keep it simple or just use the text.
+
+        await axios.post(`${baseUrl}/api/send-email`, {
+            type: 'status_update',
+            email: order.customer_email,
+            orderId: orderId,
+            status: 'Approved, Shipping in progress'
+        });
 
         res.send(`
-            < html >
+            <html>
             <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
                 <h1 style="color: green;">Order #${orderId} Approved!</h1>
                 <p>The status has been updated to "Approved, Shipping in progress".</p>
+                <p>The customer has been notified via email.</p>
                 <p>You can close this window.</p>
             </body>
-            </html >
-            `);
+            </html>
+        `);
     } catch (error) {
         console.error('Error approving order:', error);
-        res.status(500).send('Failed to approve order');
+        res.status(500).send(`Failed to approve order: ${error.message}`);
     }
 });
 
