@@ -75,12 +75,12 @@ const ProductDetails = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     {/* Image Gallery */}
-                    <div className="space-y-4">
-                        <div className="aspect-square rounded-2xl overflow-hidden bg-secondary/50 border border-border">
+                    <div className="space-y-4 max-w-md mx-auto w-full">
+                        <div className="aspect-square rounded-2xl overflow-hidden bg-white border border-gold/20 shadow-2xl shadow-gold/10 group">
                             <img
                                 src={product.images[currentImageIndex]}
                                 alt={product.name}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-contain p-8 transition-transform duration-500 group-hover:scale-110"
                             />
                         </div>
                         {product.images.length > 1 && (

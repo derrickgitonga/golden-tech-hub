@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Search, ShoppingBag, User, Menu, X, LogOut, History } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, LogOut, History, Smartphone, Laptop, Headphones, Watch, Plug } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
@@ -19,23 +19,23 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: "Smartphones", href: "/category/smartphones" },
-    { name: "Laptops", href: "/category/laptops" },
-    { name: "Audio", href: "/category/audio" },
-    { name: "Wearables", href: "/category/wearables" },
-    { name: "Accessories", href: "/category/accessories" },
+    { name: "Smartphones", href: "/category/smartphones", icon: Smartphone },
+    { name: "Laptops", href: "/category/laptops", icon: Laptop },
+    { name: "Audio", href: "/category/audio", icon: Headphones },
+    { name: "Wearables", href: "/category/wearables", icon: Watch },
+    { name: "Accessories", href: "/category/accessories", icon: Plug },
   ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-14 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[hsl(43,100%,50%)] to-[hsl(35,100%,40%)] flex items-center justify-center">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-r from-[hsl(43,100%,50%)] to-[hsl(35,100%,40%)] flex items-center justify-center">
               <span className="text-primary-foreground font-display font-bold text-xl">B</span>
             </div>
-            <span className="font-display text-2xl font-semibold text-foreground tracking-wide">
+            <span className="font-display text-xl md:text-2xl font-semibold text-foreground tracking-wide">
               Back<span className="text-gradient-gold">Market</span>
             </span>
           </Link>
@@ -97,9 +97,10 @@ const Header = () => {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-foreground hover:text-gold transition-colors py-2"
+                  className="flex items-center gap-3 text-foreground hover:text-gold transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
+                  <link.icon className="w-5 h-5 text-gold" />
                   {link.name}
                 </Link>
               ))}
