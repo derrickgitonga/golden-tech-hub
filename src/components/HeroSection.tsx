@@ -2,8 +2,8 @@ import { Search, Sparkles, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import PhoneCarousel3D from "./PhoneCarousel3D";
 import RotatingPhoneNames from "./RotatingPhoneNames";
+import PhoneCarousel3D from "./PhoneCarousel3D";
 import SamsungAd from "./SamsungAd";
 
 const HeroSection = () => {
@@ -69,6 +69,7 @@ const HeroSection = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   placeholder="Describe what you're looking for..."
                   className="flex-1 px-5 py-5 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none text-lg"
                 />

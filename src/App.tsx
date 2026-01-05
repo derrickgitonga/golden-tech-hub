@@ -7,19 +7,21 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProductProvider } from "@/contexts/ProductContext";
 import { CartProvider } from "@/contexts/CartContext";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
-import CategoryPage from "./pages/CategoryPage";
-import ProductDetails from "./pages/ProductDetails";
-import Checkout from "./pages/Checkout";
-import OrderConfirmation from "./pages/OrderConfirmation";
 import CartDrawer from "./components/CartDrawer";
-
 import ErrorBoundary from "./components/ErrorBoundary";
-import OrderHistory from "./pages/OrderHistory";
-import ComingSoon from "./pages/ComingSoon";
 import ScrollToTop from "./components/ScrollToTop";
+import { Suspense, lazy } from "react";
+import Index from "./pages/Index";
+
+// Lazy load pages
+const Auth = lazy(() => import("./pages/Auth"));
+const Admin = lazy(() => import("./pages/Admin"));
+const CategoryPage = lazy(() => import("./pages/CategoryPage"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
+const OrderHistory = lazy(() => import("./pages/OrderHistory"));
+const ComingSoon = lazy(() => import("./pages/ComingSoon"));
 
 const queryClient = new QueryClient();
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -51,18 +53,20 @@ const App = () => {
                 <BrowserRouter>
                   <ScrollToTop />
                   <CartDrawer />
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/admin" element={<Admin />} />
-                    <Route path="/category/:category" element={<CategoryPage />} />
-                    <Route path="/product/:id" element={<ProductDetails />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
-                    <Route path="/orders" element={<OrderHistory />} />
-                    <Route path="/coming-soon" element={<ComingSoon />} />
-                    <Route path="/search" element={<CategoryPage />} />
-                  </Routes>
+                  <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="/admin" element={<Admin />} />
+                      <Route path="/category/:category" element={<CategoryPage />} />
+                      <Route path="/product/:id" element={<ProductDetails />} />
+                      <Route path="/checkout" element={<Checkout />} />
+                      <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+                      <Route path="/orders" element={<OrderHistory />} />
+                      <Route path="/coming-soon" element={<ComingSoon />} />
+                      <Route path="/search" element={<CategoryPage />} />
+                    </Routes>
+                  </Suspense>
                 </BrowserRouter>
               </TooltipProvider>
             </CartProvider>

@@ -1,11 +1,10 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { TextureLoader } from "three";
-import { Float, PerspectiveCamera, Environment } from "@react-three/drei";
 import * as THREE from "three";
+import { Float, PerspectiveCamera, Environment } from "@react-three/drei";
 
 const Phone = ({ textureUrl, position, rotation }: { textureUrl: string; position: [number, number, number]; rotation: [number, number, number] }) => {
-    const texture = useLoader(TextureLoader, textureUrl);
+    const texture = useLoader(THREE.TextureLoader, textureUrl);
 
     return (
         <group position={position} rotation={rotation}>
