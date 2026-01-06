@@ -1,10 +1,10 @@
 import { useRef } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
-import { Float, PerspectiveCamera, Environment } from "@react-three/drei";
+import { Float, PerspectiveCamera, Environment, useTexture } from "@react-three/drei";
 
 const Phone = ({ textureUrl, position, rotation }: { textureUrl: string; position: [number, number, number]; rotation: [number, number, number] }) => {
-    const texture = useLoader(THREE.TextureLoader, textureUrl);
+    const texture = useTexture(textureUrl);
 
     return (
         <group position={position} rotation={rotation}>
@@ -58,6 +58,14 @@ const Carousel = () => {
         </group>
     );
 };
+
+// Preload textures
+[
+    "/iphone-17pro(front).jpeg",
+    "/black-galaxy-s24-ultra.jpg",
+    "/Grey-Google-Pixel-9-Pro-XL.jpg"
+].forEach(url => useTexture.preload(url));
+
 
 const PhoneCarousel3D = () => {
     return (

@@ -96,6 +96,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
             alt={product.name}
             className={`w-full h-full transition-transform duration-700 group-hover:scale-110 ${containImage ? "object-contain p-4" : "object-cover"
               }`}
+            loading="lazy"
           />
         </Link>
 

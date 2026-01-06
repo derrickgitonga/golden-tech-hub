@@ -7,8 +7,9 @@ import GoogleSection from "@/components/GoogleSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import StatsSection from "@/components/StatsSection";
 import Footer from "@/components/Footer";
+import { lazy, Suspense } from "react";
 
-import SamsungAd from "@/components/SamsungAd";
+const SamsungAd = lazy(() => import("@/components/SamsungAd"));
 
 const Index = () => {
   return (
@@ -18,7 +19,9 @@ const Index = () => {
         <HeroSection />
         <TrendingSection />
         <div className="xl:hidden py-8">
-          <SamsungAd />
+          <Suspense fallback={<div className="h-[400px] w-full animate-pulse bg-muted/10 rounded-2xl" />}>
+            <SamsungAd />
+          </Suspense>
         </div>
         <GoogleSection />
         <TestimonialsSection />
