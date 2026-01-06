@@ -18,9 +18,10 @@ interface Product {
 
 interface ProductCardProps {
   product: Product;
+  containImage?: boolean;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -93,7 +94,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <img
             src={product.images[currentImageIndex]}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className={`w-full h-full transition-transform duration-700 group-hover:scale-110 ${containImage ? "object-contain p-4" : "object-cover"
+              }`}
           />
         </Link>
 
