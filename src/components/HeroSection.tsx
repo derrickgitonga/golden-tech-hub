@@ -1,14 +1,19 @@
 import { Search, Sparkles, Zap } from "lucide-react";
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import RotatingPhoneNames from "./RotatingPhoneNames";
-import PhoneCarousel3D from "./PhoneCarousel3D";
-import SamsungAd from "./SamsungAd";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useMediaQuery } from "@/hooks/use-media-query";
+
+const PhoneCarousel3D = lazy(() => import("./PhoneCarousel3D"));
+const SamsungAd = lazy(() => import("./SamsungAd"));
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const isXL = useMediaQuery("(min-width: 1280px)");
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -82,7 +87,11 @@ const HeroSection = () => {
           </div>
 
           {/* 3D Phone Carousel for Mobile */}
-          <PhoneCarousel3D />
+          {isMobile && (
+            <Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-muted/10 rounded-lg" />}>
+              <PhoneCarousel3D />
+            </Suspense>
+          )}
         </div>
       </div>
 
@@ -102,7 +111,11 @@ const HeroSection = () => {
       </div>
 
       {/* Right Ad - S25 Ultra */}
-      <SamsungAd className="hidden xl:flex xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 mt-8 xl:mt-0 mb-8 xl:mb-0" />
+      {isXL && (
+        <Suspense fallback={<div className="hidden xl:flex xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 w-64 h-[400px] animate-pulse bg-muted/10 rounded-2xl" />}>
+          <SamsungAd className="hidden xl:flex xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 mt-8 xl:mt-0 mb-8 xl:mb-0" />
+        </Suspense>
+      )}
     </section>
   );
 };
