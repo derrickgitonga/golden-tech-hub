@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
@@ -186,8 +186,14 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
         }
     };
 
+    // Memoize the context value to prevent unnecessary re-renders
+    const contextValue = useMemo(
+        () => ({ products, addProduct, deleteProduct, loading }),
+        [products, loading]
+    );
+
     return (
-        <ProductContext.Provider value={{ products, addProduct, deleteProduct, loading }}>
+        <ProductContext.Provider value={contextValue}>
             {children}
         </ProductContext.Provider>
     );

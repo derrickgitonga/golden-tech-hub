@@ -41,7 +41,7 @@ const SamsungAd = ({ className }: SamsungAdProps) => {
                         muted
                         loop
                         playsInline
-                        controls
+                        preload="metadata"
                         className="w-full h-full object-cover"
                     >
                         <source src="/Samsung-ad.mp4" type="video/mp4" />

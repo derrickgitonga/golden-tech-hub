@@ -82,6 +82,8 @@ const TestimonialsSection = () => {
                   src={testimonial.avatar}
                   alt={testimonial.name}
                   className="w-12 h-12 rounded-full object-cover ring-2 ring-gold/20"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div>
                   <div className="font-medium text-foreground">{testimonial.name}</div>

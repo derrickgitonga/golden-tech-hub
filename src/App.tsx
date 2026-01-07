@@ -53,7 +53,14 @@ const App = () => {
                 <BrowserRouter>
                   <ScrollToTop />
                   <CartDrawer />
-                  <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+                  <Suspense fallback={
+                    <div className="flex items-center justify-center h-screen bg-background">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="w-16 h-16 border-4 border-gold/30 border-t-gold rounded-full animate-spin" />
+                        <p className="text-muted-foreground animate-pulse">Loading...</p>
+                      </div>
+                    </div>
+                  }>
                     <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/auth" element={<Auth />} />
