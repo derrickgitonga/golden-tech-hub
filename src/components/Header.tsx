@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Search, ShoppingBag, User, Menu, X, LogOut, History, Smartphone, Laptop, Headphones, Watch, Plug } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, LogOut, History, Smartphone, Watch, Plug } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
@@ -20,8 +20,6 @@ const Header = () => {
 
   const navLinks = [
     { name: "Smartphones", href: "/category/smartphones", icon: Smartphone },
-    { name: "Laptops", href: "/category/laptops", icon: Laptop },
-    { name: "Audio", href: "/category/audio", icon: Headphones },
     { name: "Wearables", href: "/category/wearables", icon: Watch },
     { name: "Accessories", href: "/category/accessories", icon: Plug },
   ];

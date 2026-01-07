@@ -1,10 +1,8 @@
-import { Smartphone, Laptop, Headphones, Watch, Cpu, Camera, Monitor, Gamepad2 } from "lucide-react";
+import { Smartphone, Watch, Cpu, Camera, Monitor, Gamepad2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const categories = [
   { name: "Smartphones", icon: Smartphone, count: "45K+" },
-  { name: "Laptops", icon: Laptop, count: "32K+" },
-  { name: "Audio", icon: Headphones, count: "28K+" },
   { name: "Wearables", icon: Watch, count: "15K+" },
   { name: "Components", icon: Cpu, count: "52K+" },
   { name: "Cameras", icon: Camera, count: "18K+" },

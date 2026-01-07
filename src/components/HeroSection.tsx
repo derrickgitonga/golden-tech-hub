@@ -1,4 +1,4 @@
-import { Search, Sparkles, Zap } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState, Suspense, lazy } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -43,10 +43,7 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 relative z-10 pt-20">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 animate-fade-in">
-            <Sparkles className="w-4 h-4 text-gold" />
-            <span className="text-sm text-muted-foreground">AI-Powered Discovery</span>
-          </div>
+
 
           {/* Headline */}
           <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-light mb-6 tracking-tight opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
@@ -67,7 +64,7 @@ const HeroSection = () => {
               <div className="absolute -inset-1 bg-gradient-gold rounded-2xl opacity-20 blur-lg group-hover:opacity-30 transition-opacity" />
               <div className="relative flex items-center bg-card rounded-xl border border-border overflow-hidden">
                 <div className="flex items-center gap-3 px-5 border-r border-border">
-                  <Zap className="w-5 h-5 text-gold" />
+                  <Search className="w-5 h-5 text-gold" />
                   <span className="text-sm text-muted-foreground hidden sm:block">ML Search</span>
                 </div>
                 <input

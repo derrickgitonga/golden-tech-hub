@@ -1,4 +1,4 @@
-import { ArrowRight, Flame } from "lucide-react";
+import { ArrowRight, Flame, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "./ProductCard";
 import { useProducts } from "@/contexts/ProductContext";
@@ -49,7 +49,7 @@ const TrendingSection = () => {
         {/* Apple Row */}
         <div className="mb-16">
           <h3 className="font-display text-2xl font-medium text-foreground mb-6 flex items-center gap-2">
-            <span className="text-2xl">🍎</span> Latest iPhone Series
+            <Smartphone className="w-6 h-6 text-foreground" /> Latest iPhone Series
           </h3>
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
             {appleProducts.map((product, index) => (
@@ -67,7 +67,7 @@ const TrendingSection = () => {
         {/* Samsung Row */}
         <div>
           <h3 className="font-display text-2xl font-medium text-foreground mb-6 flex items-center gap-2">
-            <span className="text-2xl">🌌</span> Latest Samsung Series
+            <Smartphone className="w-6 h-6 text-foreground" /> Latest Samsung Series
           </h3>
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
             {samsungProducts.map((product, index) => (

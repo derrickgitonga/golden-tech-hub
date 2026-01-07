@@ -90,7 +90,7 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Shop</h4>
             <ul className="space-y-3">
-              {["Smartphones", "Laptops", "Audio", "Wearables", "Accessories", "Gaming"].map((item) => (
+              {["Smartphones", "Wearables", "Accessories", "Gaming"].map((item) => (
                 <li key={item}>
                   <a href={`/category/${item.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-gold transition-colors">
                     {item}
