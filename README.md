@@ -1,90 +1,154 @@
-# Welcome to your Lovable project
+# Golden Tech Hub
 
-## Project info
+A modern web application for buying and selling refurbished electronics, built with React, TypeScript, and Supabase.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Live Demo
 
-## How can I edit this code?
+Visit the live application at [golden-tech-hub.vercel.app](https://golden-tech-hub.vercel.app)
 
-There are several ways of editing your application.
+## Overview
 
-**Use Lovable**
+Golden Tech Hub is a marketplace platform that connects buyers and sellers of refurbished electronic devices. The application provides a seamless experience for browsing products, managing listings, and facilitating transactions in the secondary electronics market.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- Browse and search refurbished electronic devices
+- User authentication and account management
+- Product listing and management
+- Responsive design for mobile and desktop
+- Real-time database updates
+- Secure payment processing integration
 
-**Use your preferred IDE**
+## Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Frontend**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **Backend**: Supabase (PostgreSQL database, Authentication, Storage)
+- **Deployment**: Vercel
+- **Package Manager**: npm/bun
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+### Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Before you begin, ensure you have the following installed:
+- Node.js (v16 or higher)
+- npm or bun package manager
+- A Supabase account and project
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Installation
 
-# Step 3: Install the necessary dependencies.
-npm i
-
+1. Clone the repository:
+```bash
+git clone https://github.com/derrickgitonga/golden-tech-hub.git
+cd golden-tech-hub
 ```
-# Step 4: Start the development server with auto-reloading and an instant preview.
+
+2. Install dependencies:
+```bash
+npm install
+# or
+bun install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
+
+4. Configure your `.env` file with your Supabase credentials:
+```
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+You can find these values in your Supabase project settings under API.
+
+### Development
+
+Start the development server:
+```bash
 npm run dev
+# or
+bun run dev
 ```
 
-## Environment Setup
+The application will be available at `http://localhost:5173`
 
-This project uses Supabase for backend services. You need to configure environment variables for the application to work correctly.
+### Building for Production
 
-1.  Copy `.env.example` to `.env`:
-    ```sh
-    cp .env.example .env
-    ```
-2.  Fill in your Supabase credentials in the `.env` file:
-    -   `VITE_SUPABASE_URL`: Your Supabase project URL
-    -   `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+Create a production build:
+```bash
+npm run build
+# or
+bun run build
+```
 
-**For Production (Vercel/Netlify/etc.):**
-You must add these same environment variables to your deployment platform's settings.
+Preview the production build:
+```bash
+npm run preview
+# or
+bun run preview
+```
 
+## Project Structure
 
-**Edit a file directly in GitHub**
+```
+golden-tech-hub/
+├── api/                 # API routes and serverless functions
+├── public/              # Static assets
+├── src/                 # Source code
+│   ├── components/      # React components
+│   ├── pages/           # Page components
+│   ├── lib/             # Utility functions and configurations
+│   └── types/           # TypeScript type definitions
+├── supabase/            # Supabase migrations and configurations
+└── server.js            # Server configuration
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Database Setup
 
-**Use GitHub Codespaces**
+This project uses Supabase for backend services. To set up your database:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Create a new Supabase project at [supabase.com](https://supabase.com)
+2. Run the migrations in the `supabase` directory
+3. Configure your tables and authentication settings as needed
 
-## What technologies are used for this project?
+## Deployment
 
-This project is built with:
+The application is configured for deployment on Vercel:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. Push your code to GitHub
+2. Import your repository in Vercel
+3. Add your environment variables in the Vercel project settings
+4. Deploy
 
-## How can I deploy this project?
+For custom domains, configure them in your Vercel project settings.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Environment Variables
 
-## Can I connect a custom domain to my Lovable project?
+Required environment variables for production deployment:
 
-Yes, you can!
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Make sure to add these to your deployment platform (Vercel, Netlify, etc.).
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Support
+
+If you encounter any issues or have questions, please open an issue on GitHub.
