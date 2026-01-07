@@ -55,7 +55,7 @@ const HeroSection = () => {
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 opacity-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             Discover the world's finest electronics with our intelligent search.
-            Find exactly what you need, powered by machine learning.
+            Find exactly what you need, we offer value for your money
           </p>
 
           {/* Search Bar */}
@@ -82,7 +82,6 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
-
           {/* 3D Phone Carousel for Mobile */}
           {isMobile && (
             <Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-muted/10 rounded-lg" />}>
