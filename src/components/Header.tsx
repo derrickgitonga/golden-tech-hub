@@ -28,7 +28,6 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-20">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-r from-[hsl(43,100%,50%)] to-[hsl(35,100%,40%)] flex items-center justify-center">
               <span className="text-white font-display font-bold text-xl">B</span>
@@ -38,7 +37,6 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
@@ -51,7 +49,6 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Actions */}
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" className="hidden md:flex" onClick={() => navigate("/search")}>
               <Search className="w-5 h-5" />
@@ -87,7 +84,6 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="lg:hidden py-4 border-t border-gray-200 animate-fade-in">
             <nav className="flex flex-col gap-4">

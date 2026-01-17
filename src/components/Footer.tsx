@@ -21,7 +21,6 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
-      {/* Newsletter Section */}
       <div className="border-b border-gray-200">
         <div className="container mx-auto px-4 py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -49,10 +48,8 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Main Footer */}
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
-          {/* Brand Column */}
           <div className="col-span-2">
             <a href="/" className="flex items-center gap-2 mb-6">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-[hsl(43,100%,50%)] to-[hsl(35,100%,40%)] flex items-center justify-center">
@@ -86,7 +83,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Shop */}
           <div>
             <h4 className="font-semibold text-gray-900 mb-4">Shop</h4>
             <ul className="space-y-3">
@@ -100,7 +96,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Company */}
           <div>
             <h4 className="font-semibold text-gray-900 mb-4">Company</h4>
             <ul className="space-y-3">
@@ -114,7 +109,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support */}
           <div>
             <h4 className="font-semibold text-gray-900 mb-4">Support</h4>
             <ul className="space-y-3">
@@ -128,7 +122,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
             <h4 className="font-semibold text-gray-900 mb-4">Contact</h4>
             <ul className="space-y-4">
@@ -151,7 +144,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="border-t border-gray-200">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">

@@ -33,7 +33,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
     : 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent link navigation
+    e.preventDefault();
     e.stopPropagation();
     addToCart({
       id: product.id,
@@ -45,7 +45,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent link navigation
+    e.preventDefault();
     e.stopPropagation();
     addToCart({
       id: product.id,
@@ -68,14 +68,14 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
         setCurrentImageIndex(0);
       }}
     >
-      {/* Badge */}
+
       {product.badge && (
         <div className="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-gold text-primary-foreground text-xs font-semibold">
           {product.badge}
         </div>
       )}
 
-      {/* Favorite Button */}
+
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -90,7 +90,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
         />
       </button>
 
-      {/* Image Container */}
+
       <div className={`relative aspect-square overflow-hidden ${isSmartphone ? 'bg-white' : 'bg-secondary/50'}`}>
         <Link to={`/product/${product.id}`}>
           <img
@@ -103,7 +103,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
           />
         </Link>
 
-        {/* Color Variant Dots - Back Market Style */}
+
         {product.images.length > 1 && (
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {product.images.slice(0, 5).map((_, index) => (
@@ -124,7 +124,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
           </div>
         )}
 
-        {/* Quick Actions */}
+
         <div
           className={`absolute inset-x-4 bottom-4 flex gap-2 transition-all duration-300 ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
@@ -139,7 +139,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
         </div>
       </div>
 
-      {/* Content */}
+
       <div className="p-3 md:p-5">
         <div className={`text-xs font-medium uppercase tracking-wider mb-2 ${isSmartphone ? 'text-gray-900' : 'text-gold'}`}>
           {product.brand}
@@ -150,15 +150,15 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
           </h3>
         </Link>
 
-        {/* Rating */}
+
         <div className="flex items-center gap-2 mb-4">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
                 className={`w-3 h-3 md:w-4 md:h-4 ${i < Math.floor(product.rating)
-                    ? isSmartphone ? "fill-gray-900 text-gray-900" : "fill-gold text-gold"
-                    : isSmartphone ? "text-gray-400" : "text-muted-foreground"
+                  ? isSmartphone ? "fill-gray-900 text-gray-900" : "fill-gold text-gold"
+                  : isSmartphone ? "text-gray-400" : "text-muted-foreground"
                   }`}
               />
             ))}
@@ -168,7 +168,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
           </span>
         </div>
 
-        {/* Price */}
+
         <div className="flex items-center gap-3">
           <span className={`font-display text-lg md:text-2xl font-semibold ${isSmartphone ? 'text-gray-900' : 'text-foreground'}`}>
             ${product.price.toLocaleString()}

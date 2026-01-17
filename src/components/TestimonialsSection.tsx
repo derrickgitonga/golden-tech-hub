@@ -33,7 +33,6 @@ const testimonials = [
 const TestimonialsSection = () => {
   return (
     <section className="py-24 bg-card relative overflow-hidden">
-      {/* Background elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-gold/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
 
@@ -54,29 +53,24 @@ const TestimonialsSection = () => {
               className="relative p-8 rounded-2xl bg-background border border-border hover:border-gold/30 transition-all duration-500 opacity-0 animate-fade-in-up"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
-              {/* Quote icon */}
               <div className="absolute -top-4 -left-2 w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
                 <Quote className="w-5 h-5 text-gold" />
               </div>
 
-              {/* Rating */}
               <div className="flex gap-1 mb-6 pt-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-gray-900 text-gray-900" />
                 ))}
               </div>
 
-              {/* Content */}
               <p className="text-foreground/90 leading-relaxed mb-8">
                 "{testimonial.content}"
               </p>
 
-              {/* Product tag */}
               <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-secondary text-sm text-muted-foreground mb-6">
                 Purchased: {testimonial.product}
               </div>
 
-              {/* Author */}
               <div className="flex items-center gap-4 pt-6 border-t border-border">
                 <img
                   src={testimonial.avatar}
@@ -94,7 +88,6 @@ const TestimonialsSection = () => {
           ))}
         </div>
 
-        {/* Stats row */}
         <div className="mt-20 p-8 rounded-2xl glass">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
