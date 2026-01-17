@@ -157,8 +157,8 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
               <Star
                 key={i}
                 className={`w-3 h-3 md:w-4 md:h-4 ${i < Math.floor(product.rating)
-                  ? isSmartphone ? "fill-yellow-400 text-yellow-400" : "fill-gold text-gold"
-                  : isSmartphone ? "text-gray-300" : "text-muted-foreground"
+                    ? isSmartphone ? "fill-gray-900 text-gray-900" : "fill-gold text-gold"
+                    : isSmartphone ? "text-gray-400" : "text-muted-foreground"
                   }`}
               />
             ))}
