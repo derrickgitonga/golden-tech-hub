@@ -22,18 +22,17 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-hero">
-      {/* Animated background elements */}
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white">
+      {/* Subtle background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold/3 rounded-full blur-3xl animate-float" style={{ animationDelay: "-3s" }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/3 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold/2 rounded-full blur-3xl animate-float" style={{ animationDelay: "-3s" }} />
         <RotatingPhoneNames />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-gold/5 rounded-full" />
       </div>
 
-      {/* Grid pattern overlay */}
+      {/* Subtle grid pattern */}
       <div
-        className="absolute inset-0 opacity-[0.02]"
+        className="absolute inset-0 opacity-[0.015]"
         style={{
           backgroundImage: `linear-gradient(hsl(var(--gold)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--gold)) 1px, transparent 1px)`,
           backgroundSize: "100px 100px",
@@ -42,18 +41,15 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-4 relative z-10 pt-20">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-
-
           {/* Headline */}
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-light mb-6 tracking-tight opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-light mb-6 tracking-tight text-gray-900 opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
             Premium Tech,
             <br />
             <span className="text-gradient-gold font-medium">Reimagined</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 opacity-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-12 opacity-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             Discover the world's finest electronics with our intelligent search.
             Find exactly what you need, we offer value for your money
           </p>
@@ -61,11 +57,11 @@ const HeroSection = () => {
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto mb-8 opacity-0 animate-fade-in" style={{ animationDelay: "0.6s" }}>
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-gold rounded-2xl opacity-20 blur-lg group-hover:opacity-30 transition-opacity" />
-              <div className="relative flex items-center bg-card rounded-xl border border-border overflow-hidden">
-                <div className="flex items-center gap-3 px-5 border-r border-border">
+              <div className="absolute -inset-1 bg-gradient-gold rounded-2xl opacity-10 blur-lg group-hover:opacity-20 transition-opacity" />
+              <div className="relative flex items-center bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <div className="flex items-center gap-3 px-5 border-r border-gray-200">
                   <Search className="w-5 h-5 text-gold" />
-                  <span className="text-sm text-muted-foreground hidden sm:block">ML Search</span>
+                  <span className="text-sm text-gray-600 hidden sm:block">ML Search</span>
                 </div>
                 <input
                   type="text"
@@ -73,7 +69,7 @@ const HeroSection = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   placeholder="Describe what you're looking for..."
-                  className="flex-1 px-5 py-5 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none text-lg"
+                  className="flex-1 px-5 py-5 bg-transparent text-gray-900 placeholder:text-gray-500 focus:outline-none text-lg"
                 />
                 <Button variant="gold" size="lg" className="m-2 rounded-lg" onClick={handleSearch}>
                   <Search className="w-5 h-5" />
@@ -92,7 +88,7 @@ const HeroSection = () => {
       </div>
 
       {/* Left Ad - iPhone 17 */}
-      <div className="relative xl:absolute xl:left-8 xl:top-1/2 xl:-translate-y-1/2 w-full max-w-xs mx-auto xl:w-64 h-[400px] bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center group hover:border-gold/30 transition-all duration-500 animate-fade-in z-20 mt-8 xl:mt-0">
+      <div className="relative xl:absolute xl:left-8 xl:top-1/2 xl:-translate-y-1/2 w-full max-w-xs mx-auto xl:w-64 h-[400px] bg-white/90 backdrop-blur-md border border-gray-200 rounded-2xl overflow-hidden flex flex-col items-center justify-center group hover:border-gold/30 hover:shadow-lg transition-all duration-500 animate-fade-in z-20 mt-8 xl:mt-0">
         <video
           autoPlay
           muted
@@ -108,7 +104,7 @@ const HeroSection = () => {
 
       {/* Right Ad - S25 Ultra */}
       {isXL && (
-        <Suspense fallback={<div className="hidden xl:flex xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 w-64 h-[400px] animate-pulse bg-muted/10 rounded-2xl" />}>
+        <Suspense fallback={<div className="hidden xl:flex xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 w-64 h-[400px] animate-pulse bg-gray-100 rounded-2xl" />}>
           <SamsungAd className="hidden xl:flex xl:absolute xl:right-8 xl:top-1/2 xl:-translate-y-1/2 mt-8 xl:mt-0 mb-8 xl:mb-0" />
         </Suspense>
       )}

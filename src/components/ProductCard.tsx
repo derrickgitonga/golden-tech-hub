@@ -57,9 +57,11 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
     navigate("/checkout");
   };
 
+  const isSmartphone = product.brand === "Apple" || product.brand === "Samsung" || product.brand === "Google";
+
   return (
     <div
-      className="group relative bg-gradient-to-b from-[hsl(0,0%,8%)] to-[hsl(0,0%,5%)] rounded-2xl overflow-hidden border border-border hover:border-gold/30 transition-all duration-500"
+      className={`group relative ${isSmartphone ? 'bg-gradient-to-b from-gray-50 to-white shadow-sm hover:shadow-md' : 'bg-gradient-to-b from-[hsl(0,0%,8%)] to-[hsl(0,0%,5%)] shadow-card'} rounded-2xl overflow-hidden border ${isSmartphone ? 'border-gray-200' : 'border-border'} hover:border-gold/30 transition-all duration-300`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
@@ -80,16 +82,16 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
           e.stopPropagation();
           setIsFavorite(!isFavorite);
         }}
-        className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-[hsl(0,0%,10%)]/50 backdrop-blur-xl border border-[hsl(0,0%,18%)]/50 flex items-center justify-center hover:bg-gold/20 transition-colors"
+        className={`absolute top-4 right-4 z-20 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${isSmartphone ? 'bg-white/80 hover:bg-white border border-gray-200' : 'bg-[hsl(0,0%,10%)]/50 backdrop-blur-xl border border-[hsl(0,0%,18%)]/50 hover:bg-gold/20'}`}
       >
         <Heart
-          className={`w-5 h-5 transition-colors ${isFavorite ? "fill-gold text-gold" : "text-muted-foreground"
+          className={`w-5 h-5 transition-colors ${isFavorite ? "fill-gold text-gold" : isSmartphone ? "text-gray-600" : "text-muted-foreground"
             }`}
         />
       </button>
 
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden bg-secondary/50">
+      <div className={`relative aspect-square overflow-hidden ${isSmartphone ? 'bg-white' : 'bg-secondary/50'}`}>
         <Link to={`/product/${product.id}`}>
           <img
             src={product.images[currentImageIndex]}
@@ -101,19 +103,24 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
           />
         </Link>
 
-        {/* Image Dots */}
+        {/* Color Variant Dots - Back Market Style */}
         {product.images.length > 1 && (
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-            {product.images.map((_, index) => (
+            {product.images.slice(0, 5).map((_, index) => (
               <button
                 key={index}
                 onMouseEnter={() => setCurrentImageIndex(index)}
                 className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex
-                  ? "bg-gold w-6"
-                  : "bg-foreground/30 hover:bg-foreground/50"
+                  ? "bg-gray-900 w-6"
+                  : isSmartphone ? "bg-gray-300 hover:bg-gray-400" : "bg-foreground/30 hover:bg-foreground/50"
                   }`}
               />
             ))}
+            {product.images.length > 5 && (
+              <span className={`text-xs ${isSmartphone ? 'text-gray-600' : 'text-muted-foreground'}`}>
+                +{product.images.length - 5}
+              </span>
+            )}
           </div>
         )}
 
@@ -134,11 +141,11 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
 
       {/* Content */}
       <div className="p-3 md:p-5">
-        <div className="text-xs text-gold font-medium uppercase tracking-wider mb-2">
+        <div className={`text-xs font-medium uppercase tracking-wider mb-2 ${isSmartphone ? 'text-gray-900' : 'text-gold'}`}>
           {product.brand}
         </div>
         <Link to={`/product/${product.id}`}>
-          <h3 className="font-display text-sm md:text-lg font-medium text-foreground mb-2 md:mb-3 line-clamp-2 group-hover:text-gold transition-colors">
+          <h3 className={`font-display text-sm md:text-lg font-medium mb-2 md:mb-3 line-clamp-2 transition-colors ${isSmartphone ? 'text-gray-900 group-hover:text-gray-700' : 'text-foreground group-hover:text-gold'}`}>
             {product.name}
           </h3>
         </Link>
@@ -150,28 +157,28 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
               <Star
                 key={i}
                 className={`w-3 h-3 md:w-4 md:h-4 ${i < Math.floor(product.rating)
-                  ? "fill-gold text-gold"
-                  : "text-muted-foreground"
+                  ? isSmartphone ? "fill-yellow-400 text-yellow-400" : "fill-gold text-gold"
+                  : isSmartphone ? "text-gray-300" : "text-muted-foreground"
                   }`}
               />
             ))}
           </div>
-          <span className="text-sm text-muted-foreground">
+          <span className={`text-sm ${isSmartphone ? 'text-gray-600' : 'text-muted-foreground'}`}>
             ({product.reviews})
           </span>
         </div>
 
         {/* Price */}
         <div className="flex items-center gap-3">
-          <span className="font-display text-lg md:text-2xl font-semibold text-foreground">
+          <span className={`font-display text-lg md:text-2xl font-semibold ${isSmartphone ? 'text-gray-900' : 'text-foreground'}`}>
             ${product.price.toLocaleString()}
           </span>
           {product.originalPrice && (
             <>
-              <span className="text-sm text-muted-foreground line-through">
+              <span className={`text-sm line-through ${isSmartphone ? 'text-gray-500' : 'text-muted-foreground'}`}>
                 ${product.originalPrice.toLocaleString()}
               </span>
-              <span className="px-2 py-0.5 rounded bg-gold/10 text-gold text-xs font-medium">
+              <span className={`px-2 py-0.5 rounded text-xs font-medium ${isSmartphone ? 'bg-gray-900 text-white' : 'bg-gold/10 text-gold'}`}>
                 -{discount}%
               </span>
             </>

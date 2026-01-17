@@ -25,15 +25,15 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-r from-[hsl(43,100%,50%)] to-[hsl(35,100%,40%)] flex items-center justify-center">
-              <span className="text-primary-foreground font-display font-bold text-xl">B</span>
+              <span className="text-white font-display font-bold text-xl">B</span>
             </div>
-            <span className="font-display text-xl md:text-2xl font-semibold text-foreground tracking-wide">
+            <span className="font-display text-xl md:text-2xl font-semibold text-gray-900 tracking-wide">
               Back<span className="text-gradient-gold">Market</span>
             </span>
           </Link>
@@ -44,7 +44,7 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
+                className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium"
               >
                 {link.name}
               </Link>
@@ -89,24 +89,24 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border animate-fade-in">
+          <div className="lg:hidden py-4 border-t border-gray-200 animate-fade-in">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="flex items-center gap-3 text-foreground hover:text-gold transition-colors py-2"
+                  className="flex items-center gap-3 text-gray-900 hover:text-gold transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <link.icon className="w-5 h-5 text-gold" />
                   {link.name}
                 </Link>
               ))}
-              <div className="pt-4 border-t border-border space-y-3">
+              <div className="pt-4 border-t border-gray-200 space-y-3">
                 {user && (
                   <Link
                     to="/orders"
-                    className="flex items-center gap-2 text-foreground hover:text-gold transition-colors py-2 px-1"
+                    className="flex items-center gap-2 text-gray-900 hover:text-gold transition-colors py-2 px-1"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <History className="w-4 h-4" />
