@@ -54,16 +54,21 @@ const HeroSection = () => {
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-gold rounded-2xl opacity-10 blur-lg group-hover:opacity-20 transition-opacity" />
               <div className="relative flex items-center bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="flex items-center gap-3 px-5 border-r border-gray-200">
-                  <Search className="w-5 h-5 text-gold" />
+                <button
+                  onClick={handleSearch}
+                  className="flex items-center gap-3 px-5 border-r border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer group/search"
+                  type="button"
+                  aria-label="ML Search"
+                >
+                  <Search className="w-5 h-5 text-gold group-hover/search:scale-110 transition-transform" />
                   <span className="text-sm text-gray-600 hidden sm:block">ML Search</span>
-                </div>
+                </button>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  placeholder="Describe what you're looking for..."
+                  placeholder="Enter product name..."
                   className="flex-1 px-5 py-5 bg-transparent text-gray-900 placeholder:text-gray-500 focus:outline-none text-lg"
                 />
                 <Button variant="gold" size="lg" className="m-2 rounded-lg" onClick={handleSearch}>
@@ -73,11 +78,9 @@ const HeroSection = () => {
               </div>
             </div>
           </div>
-          {isMobile && (
-            <Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-muted/10 rounded-lg" />}>
-              <PhoneCarousel3D />
-            </Suspense>
-          )}
+          <Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-muted/10 rounded-lg" />}>
+            <PhoneCarousel3D />
+          </Suspense>
         </div>
       </div>
 

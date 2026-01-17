@@ -104,7 +104,9 @@ export default defineConfig(({ mode }) => ({
       'react-router-dom',
       '@tanstack/react-query',
       'axios',
+      'three',
+      '@react-three/fiber',
+      '@react-three/drei',
     ],
-    exclude: ['@react-three/fiber', '@react-three/drei', 'three'], // Exclude heavy 3D libs from pre-bundling
   },
 }));
