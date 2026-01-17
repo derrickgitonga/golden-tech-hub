@@ -154,7 +154,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                 reviews: 830,
                 images: ["/grey-iphone-15-pro.jpg", "/titanium-iphone-15pro.jpg", "/white-iphone-15pro.jpg"],
                 category: "Smartphones",
-                description: "Forged in titanium. iPhone 15 Pro changed the game with aerospace-grade materials. It features a 6.1-inch Super Retina XDR display and the A17 Pro chip for next-level gaming performance with hardware ray tracing. The Action Button gives you quick access to your favorite features.\n\nFace ID is fully functional and working perfectly. The 48MP main camera captures incredible detail with the Photonic Engine for improved low-light performance. Log video recording enables professional color grading. With 5G connectivity, USB-C 3 for fast data transfer, and iOS 17, it's lighter, stronger, and more pro than ever before.",
+                description: "(US Version) Forged in titanium. iPhone 15 Pro changed the game with aerospace-grade materials. It features a 6.1-inch Super Retina XDR display and the A17 Pro chip for next-level gaming performance with hardware ray tracing. The Action Button gives you quick access to your favorite features.\n\nFace ID is fully functional and working perfectly. The 48MP main camera captures incredible detail with the Photonic Engine for improved low-light performance. Log video recording enables professional color grading. With 5G connectivity, USB-C 3 for fast data transfer, and iOS 17, it's lighter, stronger, and more pro than ever before.",
                 features: ["8GB RAM", "iOS 17", "6.1\" Super Retina XDR", "48MP Main Camera", "A17 Pro Chip", "Titanium Design", "Face ID Functional", "5G Capable", "Action Button", "Hardware Ray Tracing", "USB-C 3"],
                 variants: {
                     colors: [
@@ -179,7 +179,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                 reviews: 225,
                 images: ["/pink-iphone-16.jpg", "/teal-iphone-16.jpg", "/ultramine-iphone-16.jpg", "/white-iphone-16.jpg"],
                 category: "Smartphones",
-                description: "The power of Apple Intelligence. iPhone 16 features a vibrant new look with color-infused glass and the powerful A18 chip. It boasts a 6.1-inch Super Retina XDR display with Dynamic Island and the all-new Camera Control button for instant access to visual intelligence.\n\nFace ID is fully functional and working perfectly. The 48MP Fusion camera with 2x Telephoto captures stunning photos with Photographic Styles for personalized looks. Features include Action Button, Macro Photography, Spatial Audio recording, and 5G connectivity. With iOS 18, it's the perfect blend of style and functionality.",
+                description: "(US Version) The power of Apple Intelligence. iPhone 16 features a vibrant new look with color-infused glass and the powerful A18 chip. It boasts a 6.1-inch Super Retina XDR display with Dynamic Island and the all-new Camera Control button for instant access to visual intelligence.\n\nFace ID is fully functional and working perfectly. The 48MP Fusion camera with 2x Telephoto captures stunning photos with Photographic Styles for personalized looks. Features include Action Button, Macro Photography, Spatial Audio recording, and 5G connectivity. With iOS 18, it's the perfect blend of style and functionality.",
                 features: ["6GB RAM", "iOS 18", "6.1\" Super Retina XDR", "48MP Fusion Camera", "A18 Chip", "Face ID Functional", "5G Capable", "Camera Control", "Dynamic Island", "Action Button", "Macro Photography"],
                 variants: {
                     colors: [
@@ -205,7 +205,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                 reviews: 95,
                 images: ["/black-iphone-16pro.jpg", "/desert-iphone-16-pro.jpg"],
                 category: "Smartphones",
-                description: "Built for Apple Intelligence. The iPhone 16 Pro features the powerful A18 Pro chip and a stunning 6.3-inch Super Retina XDR display with ProMotion. The all-new Camera Control button gives you instant access to the 48MP Fusion camera with 5x Telephoto for incredible zoom.\n\nFace ID is fully functional and working perfectly. Capture stunning 4K 120fps video with Dolby Vision and take advantage of advanced video features for filmmakers. The titanium design is both elegant and durable. With 5G connectivity, USB-C 3.0 for fast transfers, and iOS 18, it's the ultimate pro tool.",
+                description: "(US Version) Built for Apple Intelligence. The iPhone 16 Pro features the powerful A18 Pro chip and a stunning 6.3-inch Super Retina XDR display with ProMotion. The all-new Camera Control button gives you instant access to the 48MP Fusion camera with 5x Telephoto for incredible zoom.\n\nFace ID is fully functional and working perfectly. Capture stunning 4K 120fps video with Dolby Vision and take advantage of advanced video features for filmmakers. The titanium design is both elegant and durable. With 5G connectivity, USB-C 3.0 for fast transfers, and iOS 18, it's the ultimate pro tool.",
                 features: ["8GB RAM", "iOS 18", "6.3\" Super Retina XDR", "48MP Fusion Camera", "A18 Pro Chip", "Titanium Design", "Face ID Functional", "5G Capable", "Camera Control", "4K 120fps Video", "USB-C 3.0"],
                 variants: {
                     colors: [
@@ -229,7 +229,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                 reviews: 69,
                 images: ["/gold-iphone-17pro(back).jpeg", "/silver-iphone-17pro(back).jpeg", "/grey-iphone-17pro(front-and-back).jpeg", "/iphone-17pro(cover photo).jpeg", "/iphone-17pro(front).jpeg", "/gold-silver-black-iphone-17pro(back).jpeg"],
                 category: "Smartphones",
-                description: "Beyond Pro. The iPhone 17 Pro sets a new benchmark for smartphone photography with its quad-pixel sensor and 16-core Neural Engine. It features a 6.4-inch ProMotion display with 3000 nits peak brightness and a seamless all-screen design with under-display Face ID for an uninterrupted view.\n\nFace ID is fully functional and working perfectly with the new under-display technology. The triple 48MP camera system with LiDAR scanner enables 8K video recording and professional-grade photography. Features include Tetraprism Telephoto, Wi-Fi 7, Crash Detection, Spatial Audio, and Thread Networking. With the groundbreaking A19 Bionic chip and iOS 19, it's a professional studio in your pocket.",
+                description: "(US Version) Beyond Pro. The iPhone 17 Pro sets a new benchmark for smartphone photography with its quad-pixel sensor and 16-core Neural Engine. It features a 6.4-inch ProMotion display with 3000 nits peak brightness and a seamless all-screen design with under-display Face ID for an uninterrupted view.\n\nFace ID is fully functional and working perfectly with the new under-display technology. The triple 48MP camera system with LiDAR scanner enables 8K video recording and professional-grade photography. Features include Tetraprism Telephoto, Wi-Fi 7, Crash Detection, Spatial Audio, and Thread Networking. With the groundbreaking A19 Bionic chip and iOS 19, it's a professional studio in your pocket.",
                 features: ["12GB RAM", "iOS 19", "6.4\" ProMotion Display", "Triple 48MP Camera", "A19 Bionic Chip", "Face ID Functional", "5G Capable", "Under-Display Face ID", "8K Video Recording", "LiDAR Scanner", "Wi-Fi 7"],
                 variants: {
                     colors: [
@@ -256,7 +256,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                 reviews: 73,
                 images: ["/grey-iphone-air(back-and-front).jpeg", "/iphone-air(camera0.jpeg", "/iphone-air(cover-photo).jpeg"],
                 category: "Smartphones",
-                description: "Impossibly thin. Powerfully capable. The iPhone Air redefines portability with its 5mm ultra-slim profile and featherweight body. It features a 6.1-inch OLED Retina display and the revolutionary M4 mobile chip for flagship performance in an incredibly thin design.\n\nFace ID is fully functional and working perfectly. The 48MP Fusion camera with Smart HDR 6 and Next-Gen Portraits delivers stunning photos in a streamlined, single-lens design. Night Mode and 4K 60fps video prove that less can truly be more. With 5G connectivity and iOS 19, it combines portability with power.",
+                description: "(US Version) Impossibly thin. Powerfully capable. The iPhone Air redefines portability with its 5mm ultra-slim profile and featherweight body. It features a 6.1-inch OLED Retina display and the revolutionary M4 mobile chip for flagship performance in an incredibly thin design.\n\nFace ID is fully functional and working perfectly. The 48MP Fusion camera with Smart HDR 6 and Next-Gen Portraits delivers stunning photos in a streamlined, single-lens design. Night Mode and 4K 60fps video prove that less can truly be more. With 5G connectivity and iOS 19, it combines portability with power.",
                 features: ["8GB RAM", "iOS 19", "6.1\" OLED Retina", "48MP Fusion Camera", "M4 Mobile Chip", "Face ID Functional", "5G Capable", "5mm Ultra-Slim", "Smart HDR 6", "Night Mode", "4K 60fps Video"],
                 variants: {
                     colors: [
@@ -294,7 +294,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                 images: ["/Black Iphone 12(Renewed).jpg", "/Green Iphone 12(Renewed).jpg", "/Purple iphone 12(Renewed).jpg", "/Red Iphone 12(Renewed).jpg", "/White Iphone 12(Renewed).jpg", "/Pacific Blue Iphone 12  pro(Renewed).jpg"],
                 badge: "Fully Unlocked",
                 category: "Smartphones",
-                description: "Experience the iPhone 12 in pristine renewed condition. This fully unlocked device works with any carrier worldwide. The stunning 6.1-inch Super Retina XDR display brings your content to life with incredible color accuracy and HDR support. Powered by the A14 Bionic chip, it delivers exceptional performance for all your apps and games.\n\nFace ID is fully functional and working perfectly, providing secure and convenient authentication. The dual 12MP camera system captures stunning photos in any light with Night mode, Deep Fusion, and Smart HDR 3. Record beautiful 4K Dolby Vision HDR video with cinematic stabilization.\n\nThis renewed iPhone 12 has been professionally inspected, tested, and certified to work and look like new. It comes with a minimum 85% battery capacity guarantee. Enjoy 5G connectivity for lightning-fast downloads and high-quality streaming. The Ceramic Shield front cover offers 4x better drop performance.",
+                description: "(US Version) Experience the iPhone 12 in pristine renewed condition. This fully unlocked device works with any carrier worldwide. The stunning 6.1-inch Super Retina XDR display brings your content to life with incredible color accuracy and HDR support. Powered by the A14 Bionic chip, it delivers exceptional performance for all your apps and games.\n\nFace ID is fully functional and working perfectly, providing secure and convenient authentication. The dual 12MP camera system captures stunning photos in any light with Night mode, Deep Fusion, and Smart HDR 3. Record beautiful 4K Dolby Vision HDR video with cinematic stabilization.\n\nThis renewed iPhone 12 has been professionally inspected, tested, and certified to work and look like new. It comes with a minimum 85% battery capacity guarantee. Enjoy 5G connectivity for lightning-fast downloads and high-quality streaming. The Ceramic Shield front cover offers 4x better drop performance.",
                 features: ["Fully Unlocked - Works with Any Carrier", "Face ID Fully Functional", "6.1\" Super Retina XDR Display", "A14 Bionic Chip", "Dual 12MP Camera System", "5G Capable", "Night Mode", "MagSafe Compatible", "IP68 Water Resistant", "Ceramic Shield"],
                 variants: {
                     colors: [
@@ -323,7 +323,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                 images: ["/Graphite Iphone 13 pro max(Renewed).jpg", "/Alpine Green Iphone 13 pro max(Renewed).jpg", "/Sierra Blue  Iphone 13 pro max(Renewed).jpg", "/White Iphone 13 pro max(Renewed).jpg"],
                 badge: "Fully Unlocked",
                 category: "Smartphones",
-                description: "The iPhone 13 Pro Max in excellent renewed condition offers incredible value without compromise. Fully unlocked and ready to use with any carrier globally. The massive 6.7-inch Super Retina XDR display with ProMotion technology delivers stunning visuals with adaptive refresh rates up to 120Hz, making everything look more vivid and lifelike.\n\nFace ID is fully functional and working perfectly for secure authentication and Apple Pay. The pro camera system features a larger sensor for 47% more light capture, delivering stunning photos even in low light. The telephoto, wide, and ultra-wide cameras work together with advanced computational photography. Cinematic mode adds shallow depth of field and automatically shifts focus in your videos.\n\nPowered by the A15 Bionic chip with 5-core GPU, this phone handles demanding tasks with ease. This professionally renewed device has been thoroughly tested and certified. Battery health guaranteed at minimum 85%. Enjoy all-day battery life, 5G connectivity, and the durability of Ceramic Shield. Perfect condition, exceptional price.",
+                description: "(US Version) The iPhone 13 Pro Max in excellent renewed condition offers incredible value without compromise. Fully unlocked and ready to use with any carrier globally. The massive 6.7-inch Super Retina XDR display with ProMotion technology delivers stunning visuals with adaptive refresh rates up to 120Hz, making everything look more vivid and lifelike.\n\nFace ID is fully functional and working perfectly for secure authentication and Apple Pay. The pro camera system features a larger sensor for 47% more light capture, delivering stunning photos even in low light. The telephoto, wide, and ultra-wide cameras work together with advanced computational photography. Cinematic mode adds shallow depth of field and automatically shifts focus in your videos.\n\nPowered by the A15 Bionic chip with 5-core GPU, this phone handles demanding tasks with ease. This professionally renewed device has been thoroughly tested and certified. Battery health guaranteed at minimum 85%. Enjoy all-day battery life, 5G connectivity, and the durability of Ceramic Shield. Perfect condition, exceptional price.",
                 features: ["Fully Unlocked - Works with Any Carrier", "Face ID Fully Functional", "6.7\" Super Retina XDR Display", "A15 Bionic Chip", "Pro Camera System", "ProMotion 120Hz", "5G Capable", "All-Day Battery Life", "Ceramic Shield", "IP68 Water Resistant"],
                 variants: {
                     colors: [
@@ -350,7 +350,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                 images: ["/black-iphone-16pro.jpg"],
                 badge: "Fully Unlocked",
                 category: "Smartphones",
-                description: "Discover the iPhone 14 in pristine renewed condition at an unbeatable price. This fully unlocked device is compatible with all major carriers worldwide, giving you the freedom to choose your plan. The gorgeous 6.1-inch Super Retina XDR display features OLED technology for true blacks and brilliant colors.\n\nFace ID is fully functional and working perfectly, providing fast and secure authentication every time. The revolutionary dual-camera system includes a 12MP Main camera with a larger sensor and faster aperture, plus an Ultra Wide camera. Photonic Engine delivers up to 2.5x better low-light performance. Action mode provides incredibly smooth video even when you're on the move.\n\nThe A15 Bionic chip with 5-core GPU powers everything smoothly. This professionally renewed iPhone 14 has passed rigorous quality checks and comes with minimum 85% battery health. Features include Crash Detection for emergency help, 5G connectivity for superfast speeds, and all-day battery life. Ceramic Shield front is tougher than any smartphone glass.",
+                description: "(US Version) Discover the iPhone 14 in pristine renewed condition at an unbeatable price. This fully unlocked device is compatible with all major carriers worldwide, giving you the freedom to choose your plan. The gorgeous 6.1-inch Super Retina XDR display features OLED technology for true blacks and brilliant colors.\n\nFace ID is fully functional and working perfectly, providing fast and secure authentication every time. The revolutionary dual-camera system includes a 12MP Main camera with a larger sensor and faster aperture, plus an Ultra Wide camera. Photonic Engine delivers up to 2.5x better low-light performance. Action mode provides incredibly smooth video even when you're on the move.\n\nThe A15 Bionic chip with 5-core GPU powers everything smoothly. This professionally renewed iPhone 14 has passed rigorous quality checks and comes with minimum 85% battery health. Features include Crash Detection for emergency help, 5G connectivity for superfast speeds, and all-day battery life. Ceramic Shield front is tougher than any smartphone glass.",
                 features: ["Fully Unlocked - Works with Any Carrier", "Face ID Fully Functional", "6.1\" Super Retina XDR Display", "A15 Bionic 5-Core GPU", "12MP Dual Camera System", "Photonic Engine", "Action Mode Video", "5G Capable", "Crash Detection", "All-Day Battery", "Ceramic Shield"],
                 variants: {
                     colors: [
@@ -416,6 +416,87 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
                         { size: "128GB", price: 499 },
                         { size: "256GB", price: 569 },
                         { size: "512GB", price: 679 }
+                    ]
+                }
+            },
+            {
+                id: 100006,
+                name: "iPhone 11 (Renewed)",
+                brand: "Apple",
+                price: 299,
+                originalPrice: 599,
+                rating: 4.4,
+                reviews: 4521,
+                images: ["/Black iphone 11(Renewed).jpg", "/Green iphone 11(Renewed).jpg", "/Purple Iphone 11(Renewed).jpg", "/Red Iphone 11(Renewed).jpg", "/white Iphone 11(Renewed).jpg", "/Yellow Iphone 11(Renewed).jpg"],
+                badge: "Fully Unlocked",
+                category: "Smartphones",
+                description: "(US Version) The iPhone 11 in excellent renewed condition delivers incredible value and performance. This fully unlocked device works seamlessly with any carrier worldwide, giving you complete freedom to choose your plan. The stunning 6.1-inch Liquid Retina LCD display brings your photos and videos to life with true-to-life colors.\n\nFace ID is fully functional and working perfectly for secure authentication and Apple Pay. The dual-camera system features Ultra Wide and Wide cameras for beautiful photos and 4K video. Night mode captures stunning low-light photos automatically. Take Portrait mode photos with advanced bokeh and Depth Control.\n\nPowered by the A13 Bionic chip, this phone handles everything from gaming to photo editing with ease. This professionally renewed iPhone 11 has been thoroughly tested and certified to work like new, with minimum 85% battery health guaranteed. Features include all-day battery life, wireless charging, IP68 water resistance (up to 2 meters for 30 minutes), and spatial audio. An incredible iPhone at an unbeatable price.",
+                features: ["Fully Unlocked - Works with Any Carrier", "Face ID Fully Functional", "6.1\" Liquid Retina Display", "A13 Bionic Chip", "Dual Camera System", "Night Mode", "4K Video Recording", "All-Day Battery Life", "Wireless Charging", "IP68 Water Resistant"],
+                variants: {
+                    colors: [
+                        { name: "Black", hex: "#000000", image: "/Black iphone 11(Renewed).jpg" },
+                        { name: "Green", hex: "#059669", image: "/Green iphone 11(Renewed).jpg" },
+                        { name: "Purple", hex: "#9333EA", image: "/Purple Iphone 11(Renewed).jpg" },
+                        { name: "Red", hex: "#DC2626", image: "/Red Iphone 11(Renewed).jpg" },
+                        { name: "White", hex: "#FFFFFF", image: "/white Iphone 11(Renewed).jpg" },
+                        { name: "Yellow", hex: "#EAB308", image: "/Yellow Iphone 11(Renewed).jpg" }
+                    ],
+                    storage: [
+                        { size: "64GB", price: 299 },
+                        { size: "128GB", price: 339 },
+                        { size: "256GB", price: 399 }
+                    ]
+                }
+            },
+            {
+                id: 100007,
+                name: "iPhone 11 Pro Max (Renewed)",
+                brand: "Apple",
+                price: 449,
+                originalPrice: 1099,
+                rating: 4.7,
+                reviews: 3156,
+                images: ["/Space Gray iPhone 11 Pro Max.jpg", "/Gold iPhone 11 Pro Max,.jpg", "/Silver iPhone 11 Pro Max.jpg", "/Midnight Green Iphone 11 pro max(Renewed).jpg"],
+                badge: "Fully Unlocked",
+                category: "Smartphones",
+                description: "(US Version) The iPhone 11 Pro Max in pristine renewed condition represents the pinnacle of iPhone design and performance from its generation. This fully unlocked flagship works with all major carriers worldwide. The massive 6.5-inch Super Retina XDR OLED display is the brightest iPhone display ever, perfect for HDR content and outdoor use.\n\nFace ID is fully functional and working perfectly, providing the most secure facial authentication. The pro camera system features three 12MP cameras (Ultra Wide, Wide, Telephoto) for professional-quality photos and videos. Night mode works on all cameras for stunning low-light photography. Deep Fusion uses advanced machine learning for incredible detail. Record 4K video at 60fps with extended dynamic range.\n\nPowered by the A13 Bionic chip with third-generation Neural Engine, it delivers exceptional performance and efficiency. This professionally renewed iPhone 11 Pro Max has passed rigorous quality checks and comes with minimum 85% battery health. Features include the longest battery life ever in an iPhone, fast charging, wireless charging, IP68 water resistance (up to 4 meters for 30 minutes), and spatial audio. The textured matte glass back and stainless steel band feel premium in hand.",
+                features: ["Fully Unlocked - Works with Any Carrier", "Face ID Fully Functional", "6.5\" Super Retina XDR Display", "A13 Bionic Chip", "Pro Camera System (3 Cameras)", "Night Mode on All Cameras", "Deep Fusion", "4K 60fps Video", "All-Day Battery Life", "IP68 Water Resistant"],
+                variants: {
+                    colors: [
+                        { name: "Space Gray", hex: "#4B5563", image: "/Space Gray iPhone 11 Pro Max.jpg" },
+                        { name: "Gold", hex: "#F59E0B", image: "/Gold iPhone 11 Pro Max,.jpg" },
+                        { name: "Silver", hex: "#E5E7EB", image: "/Silver iPhone 11 Pro Max.jpg" },
+                        { name: "Midnight Green", hex: "#065F46", image: "/Midnight Green Iphone 11 pro max(Renewed).jpg" }
+                    ],
+                    storage: [
+                        { size: "64GB", price: 449 },
+                        { size: "256GB", price: 519 },
+                        { size: "512GB", price: 619 }
+                    ]
+                }
+            },
+            {
+                id: 100008,
+                name: "iPhone XR (Renewed)",
+                brand: "Apple",
+                price: 249,
+                originalPrice: 499,
+                rating: 4.3,
+                reviews: 5892,
+                images: ["/Red Iphone XR(Renewed).jpg", "/Silver Iphone XR(Renewed).jpg"],
+                badge: "Fully Unlocked",
+                category: "Smartphones",
+                description: "(US Version) The iPhone XR in excellent renewed condition offers exceptional value for those seeking a reliable, fully-featured iPhone. This fully unlocked device works with all major carriers worldwide, giving you the freedom to choose your plan. The beautiful 6.1-inch Liquid Retina LCD display is the most advanced LCD in a smartphone, with industry-leading color accuracy.\n\nFace ID is fully functional and working perfectly for secure authentication and Apple Pay. The advanced 12MP camera system features Portrait mode with advanced bokeh and Depth Control, Smart HDR for incredible detail, and 4K video recording at up to 60fps. The camera delivers stunning photos in any lighting condition.\n\nPowered by the A12 Bionic chip with next-generation Neural Engine, it handles demanding apps and games with ease. This professionally renewed iPhone XR has been thoroughly inspected, tested, and certified to work like new, with minimum 85% battery health guaranteed. Features include all-day battery life, wireless charging, IP67 water resistance (up to 1 meter for 30 minutes), and dual SIM with eSIM. An incredible entry point to the iPhone ecosystem.",
+                features: ["Fully Unlocked - Works with Any Carrier", "Face ID Fully Functional", "6.1\" Liquid Retina Display", "A12 Bionic Chip", "12MP Camera System", "Portrait Mode", "Smart HDR", "4K Video Recording", "All-Day Battery Life", "IP67 Water Resistant"],
+                variants: {
+                    colors: [
+                        { name: "Red", hex: "#DC2626", image: "/Red Iphone XR(Renewed).jpg" },
+                        { name: "Silver", hex: "#E5E7EB", image: "/Silver Iphone XR(Renewed).jpg" }
+                    ],
+                    storage: [
+                        { size: "64GB", price: 249 },
+                        { size: "128GB", price: 279 },
+                        { size: "256GB", price: 329 }
                     ]
                 }
             },
