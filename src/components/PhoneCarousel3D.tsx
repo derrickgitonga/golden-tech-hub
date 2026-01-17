@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { Float, PerspectiveCamera, Environment, useTexture, Text } from "@react-three/drei";
+import { Float, PerspectiveCamera, Environment, useTexture, Text, Preload } from "@react-three/drei";
 
 const Phone = ({
     textureUrl,
@@ -15,6 +15,10 @@ const Phone = ({
     phoneName: string;
 }) => {
     const texture = useTexture(textureUrl);
+
+    // Optimize texture
+    texture.minFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
 
     return (
         <group position={position} rotation={rotation}>
@@ -43,7 +47,6 @@ const Phone = ({
                     anchorY="middle"
                     maxWidth={1.3}
                     textAlign="center"
-                    font="/fonts/Inter-Bold.woff"
                     outlineWidth={0.01}
                     outlineColor="#000000"
                 >
@@ -59,7 +62,7 @@ const Carousel = () => {
 
     useFrame((state, delta) => {
         if (groupRef.current) {
-            groupRef.current.rotation.y += delta * 0.5; // Rotate the entire group
+            groupRef.current.rotation.y += delta * 0.5;
         }
     });
 
@@ -78,20 +81,21 @@ const Carousel = () => {
                 const z = Math.cos(angle) * radius;
 
                 return (
-                    <Phone
-                        key={i}
-                        textureUrl={phone.url}
-                        phoneName={phone.name}
-                        position={[x, 0, z]}
-                        rotation={[0, angle, 0]}
-                    />
+                    <Suspense key={i} fallback={null}>
+                        <Phone
+                            textureUrl={phone.url}
+                            phoneName={phone.name}
+                            position={[x, 0, z]}
+                            rotation={[0, angle, 0]}
+                        />
+                    </Suspense>
                 );
             })}
         </group>
     );
 };
 
-// Preload textures
+// Preload textures for instant display
 [
     "/iphone-17pro(front).jpeg",
     "/black-galaxy-s24-ultra.jpg",
@@ -102,12 +106,23 @@ const Carousel = () => {
 const PhoneCarousel3D = () => {
     return (
         <div className="w-full h-[300px] md:hidden relative z-10 my-8">
-            <Canvas>
+            <Canvas
+                dpr={[1, 2]}
+                performance={{ min: 0.5 }}
+                gl={{
+                    antialias: true,
+                    powerPreference: "high-performance",
+                    alpha: true
+                }}
+            >
                 <PerspectiveCamera makeDefault position={[0, 0, 6]} />
-                <ambientLight intensity={0.5} />
+                <ambientLight intensity={0.6} />
                 <pointLight position={[10, 10, 10]} intensity={1} />
-                <Carousel />
-                <Environment preset="city" />
+                <Suspense fallback={null}>
+                    <Carousel />
+                    <Environment preset="city" />
+                </Suspense>
+                <Preload all />
             </Canvas>
         </div>
     );

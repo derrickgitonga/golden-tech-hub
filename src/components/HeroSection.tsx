@@ -90,7 +90,7 @@ const HeroSection = () => {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="w-full h-full object-cover"
         >
           <source src="/iphone-ad.mp4" type="video/mp4" />
