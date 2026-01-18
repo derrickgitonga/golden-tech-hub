@@ -31,7 +31,7 @@ export default async function handler(req, res) {
                 </div>
                 
                 <p>If you have any questions, please contact our support team.</p>
-                <p>Best regards,<br>Golden Tech Hub Team</p>
+                <p>Best regards,<br>Back Market Team</p>
             </div>
         `;
     } else {
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
                 </div>
                 
                 <p>We will notify you when your order ships.</p>
-                <p>Best regards,<br>Golden Tech Hub Team</p>
+                <p>Best regards,<br>Back Market Team</p>
             </div>
         `;
         // Send Admin Email
@@ -70,7 +70,7 @@ export default async function handler(req, res) {
         const approveLink = `${baseUrl}/api/approve-order?orderId=${orderId}`;
 
         const adminMailOptions = {
-            from: 'Golden Tech Hub <backmarket.assistant@gmail.com>',
+            from: 'Back Market <backmarket.assistant@gmail.com>',
             to: 'backmarket.assistant@gmail.com', // Admin email
             subject: `[ADMIN] New Order #${orderId}`,
             html: `
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
     }
 
     const mailOptions = {
-        from: 'Golden Tech Hub <backmarket.assistant@gmail.com>',
+        from: 'Back Market <backmarket.assistant@gmail.com>',
         to: email,
         subject: subject,
         html: htmlContent
