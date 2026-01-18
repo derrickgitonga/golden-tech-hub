@@ -101,8 +101,6 @@ app.post('/api/stkpush', getAccessToken, async (req, res) => {
 });
 
 // Send Email Endpoint
-// Send Email Endpoint
-// Send Email Endpoint
 app.post('/api/send-email', async (req, res) => {
     const { type, email, address, items, total, orderId, paymentMethod, status } = req.body;
 
@@ -122,7 +120,7 @@ app.post('/api/send-email', async (req, res) => {
                 </div>
                 
                 <p>If you have any questions, please contact our support team.</p>
-                <p>Best regards,<br>Golden Tech Hub Team</p>
+                <p>Best regards,<br>Back Market Team</p>
             </div>
         `;
     } else {
@@ -178,7 +176,7 @@ app.post('/api/send-email', async (req, res) => {
                 </div>
                 
                 <p>We will notify you when your order ships.</p>
-                <p>Best regards,<br>Golden Tech Hub Team</p>
+                <p>Best regards,<br>Back Market Team</p>
             </div>
         `;
 
@@ -187,7 +185,7 @@ app.post('/api/send-email', async (req, res) => {
         const approveLink = `${baseUrl}/api/approve-order?orderId=${orderId}`;
 
         const adminMailOptions = {
-            from: 'Golden Tech Hub <backmarket.assistant@gmail.com>',
+            from: 'Back Market <backmarket.assistant@gmail.com>',
             to: 'backmarket.assistant@gmail.com', // Admin email
             subject: `[ADMIN] New Order #${orderId}`,
             html: `
@@ -219,7 +217,7 @@ app.post('/api/send-email', async (req, res) => {
     }
 
     const mailOptions = {
-        from: 'Golden Tech Hub <backmarket.assistant@gmail.com>',
+        from: 'Back Market <backmarket.assistant@gmail.com>',
         to: email,
         subject: subject,
         html: htmlContent
@@ -234,7 +232,6 @@ app.post('/api/send-email', async (req, res) => {
     }
 });
 
-// Approve Order Endpoint
 // Approve Order Endpoint
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
