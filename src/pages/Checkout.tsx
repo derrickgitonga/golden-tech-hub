@@ -8,6 +8,7 @@ import { CreditCard, Smartphone, Loader2, CheckCircle2, Mail } from "lucide-reac
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import StkPushModal from "@/components/StkPushModal";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const EXCHANGE_RATE = 129; // 1 USD = 129 KSH
 
@@ -343,11 +344,14 @@ const Checkout = () => {
                             <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-2">
                                 {items.map((item) => (
                                     <div key={item.id} className="flex gap-3">
-                                        <img
-                                            src={item.image}
-                                            alt={item.name}
-                                            className="w-16 h-16 object-cover rounded-lg bg-secondary"
-                                        />
+                                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-secondary">
+                                            <OptimizedImage
+                                                src={item.image}
+                                                alt={item.name}
+                                                objectFit="cover"
+                                                sizes="64px"
+                                            />
+                                        </div>
                                         <div className="flex-1 min-w-0">
                                             <h4 className="text-sm font-medium truncate">{item.name}</h4>
                                             <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>

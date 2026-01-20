@@ -9,6 +9,8 @@
     "server": "node server.js",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:optimized": "npm run optimize:images && vite build",
+    "optimize:images": "node scripts/convert-images.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -84,9 +86,12 @@
     "@vitejs/plugin-react-swc": "^4.2.2",
     "autoprefixer": "^10.4.23",
     "concurrently": "^9.2.1",
+    "sharp": "^0.34.5",
     "terser": "^5.44.1",
     "typescript": "^5.8.3",
     "vite-imagetools": "^9.0.2",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-pwa": "^1.2.0",
+    "workbox-window": "^7.4.0"
   }
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Heart, Star, ShoppingBag, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface Product {
   id: number;
@@ -93,13 +94,12 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
 
       <div className={`relative aspect-square overflow-hidden ${isSmartphone ? 'bg-white' : 'bg-secondary/50'}`}>
         <Link to={`/product/${product.id}`}>
-          <img
+          <OptimizedImage
             src={product.images[currentImageIndex]}
             alt={product.name}
-            className={`w-full h-full transition-transform duration-700 group-hover:scale-110 ${containImage ? "object-contain p-4" : "object-cover"
-              }`}
-            loading="lazy"
-            decoding="async"
+            className={`transition-transform duration-700 group-hover:scale-110 ${containImage ? "p-4" : ""}`}
+            objectFit={containImage ? "contain" : "cover"}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         </Link>
 

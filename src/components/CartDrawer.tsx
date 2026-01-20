@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart } = useCart();
@@ -60,13 +61,14 @@ const CartDrawer = () => {
                   key={item.id}
                   className="flex gap-4 p-4 rounded-xl bg-background border border-border"
                 >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-20 h-20 object-cover rounded-lg"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div className="w-20 h-20 rounded-lg overflow-hidden">
+                    <OptimizedImage
+                      src={item.image}
+                      alt={item.name}
+                      objectFit="cover"
+                      sizes="80px"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-gold font-medium uppercase tracking-wider">
                       {item.brand}

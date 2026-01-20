@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Package, Truck, AlertCircle } from "lucide-react";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface Order {
     id: number;
@@ -141,7 +142,7 @@ const OrderConfirmation = () => {
                                         <div className="flex items-center gap-4">
                                             <div className="w-16 h-16 bg-secondary rounded-md overflow-hidden">
                                                 {item.image && (
-                                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                                    <OptimizedImage src={item.image} alt={item.name} objectFit="cover" sizes="64px" />
                                                 )}
                                             </div>
                                             <div>

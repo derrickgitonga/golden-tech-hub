@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, Package, Calendar, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface OrderItem {
     id: number;
@@ -154,7 +155,7 @@ const OrderHistory = () => {
                                         {order.items.map((item, index) => (
                                             <div key={index} className="flex items-center gap-4">
                                                 <div className="w-16 h-16 rounded-lg bg-secondary overflow-hidden flex-shrink-0">
-                                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                                    <OptimizedImage src={item.image} alt={item.name} objectFit="cover" sizes="64px" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <h4 className="font-medium truncate">{item.name}</h4>

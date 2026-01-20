@@ -1,4 +1,4 @@
-# Golden Tech Hub
+# Back Market
 
 A modern web application for buying and selling refurbished electronics, built with React, TypeScript, and Supabase.
 
@@ -8,7 +8,7 @@ Visit the live application at [golden-tech-hub.vercel.app](https://golden-tech-h
 
 ## Overview
 
-Golden Tech Hub is a marketplace platform that connects buyers and sellers of refurbished electronic devices. The application provides a seamless experience for browsing products, managing listings, and facilitating transactions in the secondary electronics market.
+ Golden Tech Hub is a marketplace platform that connects buyers and sellers of refurbished electronic devices. The application provides a seamless experience for browsing products, managing listings, and facilitating transactions in the secondary electronics market.
 
 ## Features
 

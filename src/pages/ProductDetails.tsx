@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Star, ShoppingBag, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -98,10 +99,13 @@ const ProductDetails = () => {
                     {/* Image Gallery */}
                     <div className="space-y-4 max-w-md mx-auto w-full">
                         <div className="aspect-square rounded-2xl overflow-hidden bg-white border border-gold/20 shadow-2xl shadow-gold/10 group">
-                            <img
+                            <OptimizedImage
                                 src={product.images[currentImageIndex]}
                                 alt={product.name}
-                                className="w-full h-full object-contain p-8 transition-transform duration-500 group-hover:scale-110"
+                                className="p-8 transition-transform duration-500 group-hover:scale-110"
+                                objectFit="contain"
+                                priority={true}
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                             />
                         </div>
                         {product.images.length > 1 && (
@@ -115,10 +119,11 @@ const ProductDetails = () => {
                                             : "border-transparent hover:border-gold/50"
                                             }`}
                                     >
-                                        <img
+                                        <OptimizedImage
                                             src={image}
                                             alt={`${product.name} view ${index + 1}`}
-                                            className="w-full h-full object-cover"
+                                            objectFit="cover"
+                                            sizes="100px"
                                         />
                                     </button>
                                 ))}
