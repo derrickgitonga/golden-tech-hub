@@ -8,6 +8,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 
 const PhoneCarousel3D = lazy(() => import("./PhoneCarousel3D"));
 const SamsungAd = lazy(() => import("./SamsungAd"));
+const OptimizedVideo = lazy(() => import("./OptimizedVideo"));
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -85,17 +86,12 @@ const HeroSection = () => {
       </div>
 
       <div className="relative xl:absolute xl:left-8 xl:top-1/2 xl:-translate-y-1/2 w-full max-w-xs mx-auto xl:w-64 h-[400px] bg-white/90 backdrop-blur-md border border-gray-200 rounded-2xl overflow-hidden flex flex-col items-center justify-center group hover:border-gold/30 hover:shadow-lg transition-all duration-500 animate-fade-in z-20 mt-8 xl:mt-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="w-full h-full object-cover"
-        >
-          <source src="/iphone-ad.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <Suspense fallback={<div className="w-full h-full bg-gray-100 animate-pulse" />}>
+          <OptimizedVideo
+            src="/iphone-ad.mp4"
+            className="w-full h-full"
+          />
+        </Suspense>
       </div>
 
       {isXL && (

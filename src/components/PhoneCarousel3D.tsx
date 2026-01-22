@@ -68,9 +68,9 @@ const Carousel = () => {
 
     const radius = 2.5;
     const phones = [
-        { url: "/iphone-17pro(front).jpeg", name: "iPhone 17 Pro" },
-        { url: "/black-galaxy-s24-ultra.jpg", name: "Galaxy S24 Ultra" },
-        { url: "/Grey-Google-Pixel-9-Pro-XL.jpg", name: "Pixel 9 Pro XL" }
+        { url: "/optimized/iphone-17pro(front).webp", name: "iPhone 17 Pro" },
+        { url: "/optimized/black-galaxy-s24-ultra.webp", name: "Galaxy S24 Ultra" },
+        { url: "/optimized/Grey-Google-Pixel-9-Pro-XL.webp", name: "Pixel 9 Pro XL" }
     ];
 
     return (
@@ -97,9 +97,9 @@ const Carousel = () => {
 
 // Preload textures for instant display
 [
-    "/iphone-17pro(front).jpeg",
-    "/black-galaxy-s24-ultra.jpg",
-    "/Grey-Google-Pixel-9-Pro-XL.jpg"
+    "/optimized/iphone-17pro(front).webp",
+    "/optimized/black-galaxy-s24-ultra.webp",
+    "/optimized/Grey-Google-Pixel-9-Pro-XL.webp"
 ].forEach(url => useTexture.preload(url));
 
 
