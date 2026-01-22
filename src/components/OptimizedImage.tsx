@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, ImgHTMLAttributes } from 'react';
+import { isImagePreloaded } from '@/utils/imagePreloader';
 
 interface OptimizedImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
     src: string;
@@ -17,16 +18,36 @@ const OptimizedImage = ({
     objectFit = 'cover',
     ...props
 }: OptimizedImageProps) => {
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [isInView, setIsInView] = useState(priority);
-    const [hasError, setHasError] = useState(false);
-    const imgRef = useRef<HTMLImageElement>(null);
-
     // Get image name without extension
     const getImageName = (path: string) => {
         const filename = path.split('/').pop() || '';
         return filename.replace(/\.(jpg|jpeg|png|webp)$/i, '');
     };
+
+    // Get optimized WebP path
+    const getOptimizedPath = (imagePath: string) => {
+        const imageName = getImageName(imagePath);
+        return `/optimized/${imageName}.webp`;
+    };
+
+    // Get LQIP (Low Quality Image Placeholder) path
+    const getLqipPath = (imagePath: string) => {
+        const imageName = getImageName(imagePath);
+        return `/optimized/${imageName}-lqip.webp`;
+    };
+
+    // Check if this image was preloaded
+    const optimizedSrc = getOptimizedPath(src);
+    const lqipSrc = getLqipPath(src);
+    const wasPreloaded = isImagePreloaded(lqipSrc) || isImagePreloaded(optimizedSrc);
+
+    // If preloaded, mark as priority and immediately in view
+    const effectivePriority = priority || wasPreloaded;
+
+    const [isLoaded, setIsLoaded] = useState(wasPreloaded);
+    const [isInView, setIsInView] = useState(effectivePriority);
+    const [hasError, setHasError] = useState(false);
+    const imgRef = useRef<HTMLImageElement>(null);
 
     // Generate srcset for responsive images
     const generateSrcSet = (imagePath: string) => {
@@ -51,21 +72,9 @@ const OptimizedImage = ({
     `.trim();
     };
 
-    // Get LQIP (Low Quality Image Placeholder) path
-    const getLqipPath = (imagePath: string) => {
-        const imageName = getImageName(imagePath);
-        return `/optimized/${imageName}-lqip.webp`;
-    };
-
-    // Get optimized WebP path
-    const getOptimizedPath = (imagePath: string) => {
-        const imageName = getImageName(imagePath);
-        return `/optimized/${imageName}.webp`;
-    };
-
     // Intersection Observer for lazy loading
     useEffect(() => {
-        if (priority || !imgRef.current) return;
+        if (effectivePriority || !imgRef.current) return;
 
         const observer = new IntersectionObserver(
             (entries) => {
@@ -84,7 +93,7 @@ const OptimizedImage = ({
         observer.observe(imgRef.current);
 
         return () => observer.disconnect();
-    }, [priority]);
+    }, [effectivePriority]);
 
     const handleLoad = () => {
         setIsLoaded(true);
@@ -95,8 +104,6 @@ const OptimizedImage = ({
         setIsLoaded(true); // Still mark as loaded to remove blur
     };
 
-    const lqipSrc = getLqipPath(src);
-    const optimizedSrc = getOptimizedPath(src);
     const srcSet = generateSrcSet(src);
 
     return (
@@ -130,7 +137,7 @@ const OptimizedImage = ({
                         } ${className}`}
                     onLoad={handleLoad}
                     onError={handleError}
-                    loading={priority ? 'eager' : 'lazy'}
+                    loading={effectivePriority ? 'eager' : 'lazy'}
                     decoding="async"
                     {...props}
                 />
