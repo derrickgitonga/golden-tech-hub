@@ -4,15 +4,18 @@ interface OptimizedVideoProps {
     src: string;
     className?: string;
     poster?: string;
+    priority?: boolean;
 }
 
-const OptimizedVideo = ({ src, className = '', poster }: OptimizedVideoProps) => {
-    const [isInView, setIsInView] = useState(false);
+const OptimizedVideo = ({ src, className = '', poster, priority = false }: OptimizedVideoProps) => {
+    const [isInView, setIsInView] = useState(priority);
     const [isLoaded, setIsLoaded] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        if (priority) return;
+
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -20,7 +23,7 @@ const OptimizedVideo = ({ src, className = '', poster }: OptimizedVideoProps) =>
                     observer.disconnect();
                 }
             },
-            { rootMargin: '100px', threshold: 0.01 }
+            { rootMargin: '200px', threshold: 0.01 }
         );
 
         if (containerRef.current) {
@@ -28,7 +31,7 @@ const OptimizedVideo = ({ src, className = '', poster }: OptimizedVideoProps) =>
         }
 
         return () => observer.disconnect();
-    }, []);
+    }, [priority]);
 
     useEffect(() => {
         if (isInView && videoRef.current) {
@@ -58,7 +61,7 @@ const OptimizedVideo = ({ src, className = '', poster }: OptimizedVideoProps) =>
                     muted
                     loop
                     playsInline
-                    preload="auto"
+                    preload={priority ? "auto" : "metadata"}
                     onLoadedData={() => setIsLoaded(true)}
                     className={`w-full h-full object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                 />
