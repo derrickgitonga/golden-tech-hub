@@ -43,14 +43,16 @@ const OptimizedVideo = ({ src, className = '', poster, priority = false }: Optim
 
     return (
         <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
-            {/* Loading placeholder */}
-            <div
-                className={`absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 transition-opacity duration-700 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
-            >
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+            {/* Loading placeholder - Only show if no poster is provided */}
+            {!poster && (
+                <div
+                    className={`absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 transition-opacity duration-700 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
+                >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+                    </div>
                 </div>
-            </div>
+            )}
 
             {isInView && (
                 <video
@@ -63,7 +65,7 @@ const OptimizedVideo = ({ src, className = '', poster, priority = false }: Optim
                     playsInline
                     preload={priority ? "auto" : "metadata"}
                     onLoadedData={() => setIsLoaded(true)}
-                    className={`w-full h-full object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                    className={`w-full h-full object-cover transition-opacity duration-700 ${isLoaded || poster ? 'opacity-100' : 'opacity-0'}`}
                 />
             )}
         </div>

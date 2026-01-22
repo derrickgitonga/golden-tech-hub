@@ -1,5 +1,8 @@
 import express from 'express';
 import cors from 'cors';
+import compression from 'compression';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import axios from 'axios';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
@@ -8,9 +11,22 @@ import { createClient } from '@supabase/supabase-js';
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
+
+// Enable Gzip/Brotli compression
+app.use(compression());
+
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the React app build directory
+app.use(express.static(path.join(__dirname, 'dist'), {
+    maxAge: '1y', // Cache for 1 year
+    etag: false
+}));
 
 const PORT = 3000;
 
@@ -291,6 +307,11 @@ app.get('/api/approve-order', async (req, res) => {
         console.error('Error approving order:', error);
         res.status(500).send(`Failed to approve order: ${error.message}`);
     }
+});
+
+// All other GET requests not handled before will return the React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {

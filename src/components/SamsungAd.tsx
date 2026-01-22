@@ -38,7 +38,7 @@ const SamsungAd = ({ className }: SamsungAdProps) => {
             <div className="w-full h-full">
                 <OptimizedVideo
                     src="/Samsung-ad.mp4"
-                    poster="/Samsung-ad-poster.jpg"
+                    poster="/optimized/Samsung-ad-poster.webp"
                     className="w-full h-full"
                 />
             </div>
