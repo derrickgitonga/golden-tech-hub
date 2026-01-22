@@ -41,12 +41,20 @@ const SamsungAd = ({ className }: SamsungAdProps) => {
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="none"
+                        poster="/Samsung-ad-poster.jpg"
                         className="w-full h-full object-cover"
                     >
                         <source src="/Samsung-ad.mp4" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
+                )}
+                {!isVisible && (
+                    <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                        <div className="text-center text-gray-400">
+                            <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-gray-300 animate-pulse" />
+                        </div>
+                    </div>
                 )}
             </div>
         </div>

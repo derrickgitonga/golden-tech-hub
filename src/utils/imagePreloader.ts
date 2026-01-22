@@ -135,6 +135,14 @@ export const getCriticalImages = (): string[] => {
         'Black-Google-Pixel-9-Pro-Fold',
         'Pink-Google-Pixel-9-Pro',
         'white-iphone-16',
+        // Google Pixel phones for fast loading
+        'Grey-Google-Pixel-9-Pro-XL',
+        'White-Google-Pixel-9-Pro',
+        'pink-google-pixel-9',
+        'White-Google-Pixel-9-Pro-Fold',
+        'Blue-Google-Pixel-10',
+        'Grey-Google-Pixel-10',
+        'grey-Google-Pixel-9-Pro',
     ];
 
     // Add optimized versions
