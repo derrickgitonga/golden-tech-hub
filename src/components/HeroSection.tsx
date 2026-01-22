@@ -91,6 +91,7 @@ const HeroSection = () => {
           src="/iphone-ad.mp4"
           className="w-full h-full"
           priority={true}
+          poster="/optimized/iphone-17pro(cover photo).webp"
         />
       </div>
 
