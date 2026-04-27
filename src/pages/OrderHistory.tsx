@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
-import { supabase } from "@/lib/supabase";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,14 +37,10 @@ const OrderHistory = () => {
             if (!user?.primaryEmailAddress?.emailAddress) return;
 
             try {
-                const { data, error } = await supabase
-                    .from("orders")
-                    .select("*")
-                    .eq("customer_email", user.primaryEmailAddress.emailAddress)
-                    .order("created_at", { ascending: false });
-
-                if (error) throw error;
-                setOrders(data || []);
+                const res = await fetch(`/api/orders/email/${encodeURIComponent(user.primaryEmailAddress.emailAddress)}`);
+                if (!res.ok) throw new Error('Failed to fetch');
+                const data = await res.json();
+                setOrders(data);
             } catch (error) {
                 console.error("Error fetching orders:", error);
             } finally {

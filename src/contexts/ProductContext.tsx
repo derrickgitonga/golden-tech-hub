@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
 export interface ProductVariant {
@@ -515,15 +514,9 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
         let mappedProducts: Product[] = [];
 
         try {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.warn("Supabase fetch failed, falling back to local products only:", error.message);
-                // Don't throw, just let it proceed with empty mappedProducts
-            } else if (data) {
+            const res = await fetch('/api/products');
+            if (res.ok) {
+                const data = await res.json();
                 mappedProducts = data.map((item: any) => ({
                     id: item.id,
                     name: item.name,
@@ -541,10 +534,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
             }
         } catch (error) {
             console.error('Error fetching products:', error);
-            // We suppress the toast error here to avoid scaring the user if they are just viewing static content
-            // toast.error("Failed to load products"); 
         } finally {
-            // Always set products, combining static and fetched (if any)
             setProducts([...newProducts, ...mappedProducts]);
             setLoading(false);
         }
@@ -556,45 +546,42 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
 
     const addProduct = async (product: Omit<Product, "id">) => {
         try {
-            const dbProduct = {
-                name: product.name,
-                brand: product.brand,
-                price: product.price,
-                original_price: product.originalPrice,
-                rating: product.rating,
-                reviews: product.reviews,
-                images: product.images,
-                badge: product.badge,
-                category: product.category,
-                description: product.description,
-                features: product.features,
+            const res = await fetch('/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: product.name,
+                    brand: product.brand,
+                    price: product.price,
+                    original_price: product.originalPrice,
+                    rating: product.rating,
+                    reviews: product.reviews,
+                    images: product.images,
+                    badge: product.badge,
+                    category: product.category,
+                    description: product.description,
+                    features: product.features,
+                }),
+            });
+
+            if (!res.ok) throw new Error(await res.text());
+            const data = await res.json();
+
+            const newProduct: Product = {
+                id: data.id,
+                name: data.name,
+                brand: data.brand,
+                price: data.price,
+                originalPrice: data.original_price,
+                rating: data.rating,
+                reviews: data.reviews,
+                images: data.images || [],
+                badge: data.badge,
+                category: data.category,
+                description: data.description,
+                features: data.features || [],
             };
-
-            const { data, error } = await supabase
-                .from('products')
-                .insert([dbProduct])
-                .select()
-                .single();
-
-            if (error) throw error;
-
-            if (data) {
-                const newProduct: Product = {
-                    id: data.id,
-                    name: data.name,
-                    brand: data.brand,
-                    price: data.price,
-                    originalPrice: data.original_price,
-                    rating: data.rating,
-                    reviews: data.reviews,
-                    images: data.images || [],
-                    badge: data.badge,
-                    category: data.category,
-                    description: data.description,
-                    features: data.features || [],
-                };
-                setProducts((prev) => [newProduct, ...prev]);
-            }
+            setProducts((prev) => [newProduct, ...prev]);
         } catch (error) {
             console.error('Error adding product:', error);
             toast.error("Failed to add product");
@@ -604,13 +591,8 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
 
     const deleteProduct = async (id: number) => {
         try {
-            const { error } = await supabase
-                .from('products')
-                .delete()
-                .eq('id', id);
-
-            if (error) throw error;
-
+            const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error(await res.text());
             setProducts((prev) => prev.filter((product) => product.id !== id));
         } catch (error) {
             console.error('Error deleting product:', error);

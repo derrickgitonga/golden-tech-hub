@@ -8,7 +8,6 @@ import { Trash2, Plus, X, Package, Truck, CheckCircle, AlertCircle } from "lucid
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { supabase } from "@/lib/supabase";
 
 interface Order {
     id: number;
@@ -49,13 +48,10 @@ const Admin = () => {
     const fetchOrders = async () => {
         setLoadingOrders(true);
         try {
-            const { data, error } = await supabase
-                .from('orders')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-            setOrders(data || []);
+            const res = await fetch('/api/orders');
+            if (!res.ok) throw new Error('Failed to fetch');
+            const data = await res.json();
+            setOrders(data);
         } catch (error) {
             console.error("Error fetching orders:", error);
             toast.error("Failed to fetch orders");
@@ -66,20 +62,18 @@ const Admin = () => {
 
     const updateOrderStatus = async (orderId: number, newStatus: Order['status'], customerEmail: string) => {
         try {
-            const { error } = await supabase
-                .from('orders')
-                .update({ status: newStatus })
-                .eq('id', orderId);
-
-            if (error) throw error;
+            const res = await fetch(`/api/orders/${orderId}/status`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus }),
+            });
+            if (!res.ok) throw new Error('Failed to update');
 
             setOrders(prev => prev.map(order =>
                 order.id === orderId ? { ...order, status: newStatus } : order
             ));
-
             toast.success(`Order #${orderId} status updated to ${newStatus}`);
 
-            // Send status update email
             await fetch('/api/send-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -90,7 +84,6 @@ const Admin = () => {
                     status: newStatus
                 })
             });
-
         } catch (error) {
             console.error("Error updating status:", error);
             toast.error("Failed to update order status");

@@ -100,7 +100,7 @@ export default defineConfig(({ mode }) => ({
           // Clerk authentication
           'auth-vendor': ['@clerk/clerk-react'],
           // Data fetching and state management
-          'data-vendor': ['@tanstack/react-query', 'axios', '@supabase/supabase-js'],
+          'data-vendor': ['@tanstack/react-query', 'axios'],
           // Form libraries
           'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
         },

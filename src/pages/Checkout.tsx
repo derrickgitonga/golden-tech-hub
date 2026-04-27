@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { useCart } from "@/contexts/CartContext";
-import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import StripeCheckoutForm from "@/components/StripeCheckoutForm";
 import { CreditCard, Smartphone, Loader2, CheckCircle2, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -12,56 +14,104 @@ import OptimizedImage from "@/components/OptimizedImage";
 
 const EXCHANGE_RATE = 129; // 1 USD = 129 KSH
 
+const StripeLogo = () => (
+    <img src="/Stripe_Logo.png" alt="Stripe" className="w-16 h-6 object-contain" />
+);
+
+// Initialized once at module level — never inside a render
+const stripePromise = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+    ? loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+    : null;
+
+const stripeAppearance = {
+    theme: "night" as const,
+    variables: {
+        colorPrimary: "#D4AF37",
+        colorBackground: "#1a1a1a",
+        colorText: "#ffffff",
+        colorDanger: "#ef4444",
+        fontFamily: "system-ui, sans-serif",
+        borderRadius: "8px",
+        spacingUnit: "4px",
+    },
+};
+
 const Checkout = () => {
     const { items, totalPrice, clearCart } = useCart();
     const navigate = useNavigate();
-    const [paymentMethod, setPaymentMethod] = useState<"mpesa" | "card">("mpesa");
+    const [paymentMethod, setPaymentMethod] = useState<"mpesa" | "card" | "stripe">("mpesa");
     const [isProcessing, setIsProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [showStkModal, setShowStkModal] = useState(false);
 
-    // Form states
+    // Form state
     const [email, setEmail] = useState("");
     const [address, setAddress] = useState("");
     const [mpesaNumber, setMpesaNumber] = useState("");
-    const [cardNumber, setCardNumber] = useState("");
-    const [cardExpiry, setCardExpiry] = useState("");
-    const [cardCvc, setCardCvc] = useState("");
+
+    // Stripe state
+    const [clientSecret, setClientSecret] = useState<string | null>(null);
+    const [isLoadingStripe, setIsLoadingStripe] = useState(false);
 
     const kshAmount = Math.round(totalPrice * EXCHANGE_RATE);
 
-    const handlePayment = async (e: React.FormEvent) => {
+    // Pre-fetch PaymentIntent as soon as user switches to card or stripe tab
+    useEffect(() => {
+        const usesStripe = paymentMethod === "card" || paymentMethod === "stripe";
+        if (!usesStripe || items.length === 0) {
+            setClientSecret(null);
+            return;
+        }
+
+        let cancelled = false;
+        setIsLoadingStripe(true);
+        setClientSecret(null);
+
+        fetch("/api/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items }),
+        })
+            .then((res) => {
+                if (!res.ok) throw new Error("Payment initialization failed");
+                return res.json();
+            })
+            .then((data) => {
+                if (!cancelled) setClientSecret(data.clientSecret);
+            })
+            .catch(() => {
+                if (!cancelled) toast.error("Failed to initialize card payment. Please try again.");
+            })
+            .finally(() => {
+                if (!cancelled) setIsLoadingStripe(false);
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [paymentMethod]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const handleMpesaPayment = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsProcessing(true);
 
-        if (paymentMethod === "mpesa") {
-            // Create a description from cart items (max 12 chars for AccountReference)
-            const productName = items.map(i => i.name).join(", ");
-            const accountRef = productName.length > 12 ? productName.substring(0, 12) : productName;
+        const productName = items.map((i) => i.name).join(", ");
+        const accountRef = productName.length > 12 ? productName.substring(0, 12) : productName;
 
-            // Format phone number to 254...
-            let formattedPhone = mpesaNumber.replace(/\D/g, ''); // Remove non-digits
-            if (formattedPhone.startsWith('0')) {
-                formattedPhone = '254' + formattedPhone.substring(1);
-            } else if (formattedPhone.startsWith('7') || formattedPhone.startsWith('1')) {
-                formattedPhone = '254' + formattedPhone;
-            }
-
-            // Show the STK Push Modal instead of calling API directly
-            // Add 5-second delay before displaying STK push
-            setTimeout(() => {
-                setShowStkModal(true);
-                setIsProcessing(false);
-            }, 5000);
-            return;
-        } else {
-            // Simulate Card processing
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            await completeOrder();
+        let formattedPhone = mpesaNumber.replace(/\D/g, "");
+        if (formattedPhone.startsWith("0")) {
+            formattedPhone = "254" + formattedPhone.substring(1);
+        } else if (formattedPhone.startsWith("7") || formattedPhone.startsWith("1")) {
+            formattedPhone = "254" + formattedPhone;
         }
+
+        setTimeout(() => {
+            setShowStkModal(true);
+            setIsProcessing(false);
+        }, 5000);
     };
 
-    const handleStkConfirm = async (pin: string) => {
+    const handleStkConfirm = async (_pin: string) => {
         setShowStkModal(false);
         setIsProcessing(true);
 
@@ -70,62 +120,52 @@ const Checkout = () => {
             duration: 2000,
         });
 
-        // Simulate processing delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         await completeOrder();
     };
 
-    const completeOrder = async () => {
-        // Save order to Supabase
+    const completeOrder = async (stripePaymentIntentId = "") => {
         let orderId = Math.floor(Math.random() * 1000000).toString();
 
         try {
-            const { data: orderData, error: orderError } = await supabase
-                .from('orders')
-                .insert([
-                    {
-                        customer_email: email,
-                        customer_phone: mpesaNumber || null,
-                        total_amount: totalPrice,
-                        status: 'pending',
-                        items: items,
-                        payment_method: paymentMethod
-                    }
-                ])
-                .select()
-                .single();
-
-            if (orderError) {
-                console.error("Failed to save order:", orderError);
-                // We continue even if save fails, but log it. In production, we might want to halt or retry.
-            } else if (orderData) {
+            const res = await fetch("/api/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    customer_email: email,
+                    customer_phone: mpesaNumber || null,
+                    total_amount: totalPrice,
+                    status: "pending",
+                    items,
+                    payment_method: paymentMethod,
+                }),
+            });
+            if (res.ok) {
+                const orderData = await res.json();
                 orderId = orderData.id.toString();
+            } else {
+                console.error("Failed to save order:", await res.text());
             }
         } catch (err) {
             console.error("Error saving order:", err);
         }
 
-        // Send confirmation email
         try {
-            await fetch('/api/send-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+            await fetch("/api/send-email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    type: 'confirmation',
+                    type: "confirmation",
                     email,
                     address,
                     items,
                     total: totalPrice,
-                    orderId: orderId,
-                    paymentMethod: paymentMethod === "mpesa" ? "M-Pesa" : "Card"
+                    orderId,
+                    paymentMethod: paymentMethod === "mpesa" ? "M-Pesa" : paymentMethod === "stripe" ? "Stripe" : "Card",
                 }),
             });
         } catch (error) {
             console.error("Failed to send email:", error);
-            // Don't block success UI if email fails
         }
 
         setIsProcessing(false);
@@ -135,15 +175,14 @@ const Checkout = () => {
             description: "Your order has been placed and a confirmation email sent.",
         });
 
-        // Redirect to order confirmation with state
         const orderDetails = {
             id: orderId,
             created_at: new Date().toISOString(),
             customer_email: email,
             total_amount: totalPrice,
-            status: 'pending',
-            items: items,
-            payment_method: paymentMethod
+            status: "pending",
+            items,
+            payment_method: paymentMethod,
         };
 
         setTimeout(() => {
@@ -202,138 +241,165 @@ const Checkout = () => {
                                 <Mail className="w-5 h-5 text-gold" />
                                 Contact Information
                             </h2>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Email Address</label>
-                                <input
-                                    type="email"
-                                    placeholder="your@email.com"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
-                                />
-                                <p className="text-xs text-muted-foreground">
-                                    We'll send your order confirmation and receipts to this email.
-                                </p>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Delivery Address</label>
-                                <input
-                                    type="text"
-                                    placeholder="Enter your delivery address"
-                                    required
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
-                                />
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Email Address</label>
+                                    <input
+                                        type="email"
+                                        placeholder="your@email.com"
+                                        required
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        We'll send your order confirmation and receipts to this email.
+                                    </p>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Delivery Address</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your delivery address"
+                                        required
+                                        value={address}
+                                        onChange={(e) => setAddress(e.target.value)}
+                                        className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         <div className="bg-card border border-border rounded-xl p-6">
                             <h2 className="text-xl font-semibold mb-6">Payment Method</h2>
 
-                            <div className="flex gap-4 mb-8">
+                            {/* Payment method tabs */}
+                            <div className="flex gap-3 mb-8">
                                 <button
                                     type="button"
                                     onClick={() => setPaymentMethod("mpesa")}
-                                    className={`flex-1 p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${paymentMethod === "mpesa"
-                                        ? "border-gold bg-gold/5"
-                                        : "border-border hover:border-gold/50"
-                                        }`}
+                                    className={`flex-1 p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${
+                                        paymentMethod === "mpesa"
+                                            ? "border-gold bg-gold/5"
+                                            : "border-border hover:border-gold/50"
+                                    }`}
                                 >
-                                    <Smartphone className={`w-6 h-6 ${paymentMethod === "mpesa" ? "text-gold" : "text-muted-foreground"}`} />
-                                    <span className={`font-medium ${paymentMethod === "mpesa" ? "text-foreground" : "text-muted-foreground"}`}>M-Pesa</span>
+                                    <Smartphone
+                                        className={`w-6 h-6 ${paymentMethod === "mpesa" ? "text-gold" : "text-muted-foreground"}`}
+                                    />
+                                    <span
+                                        className={`text-sm font-medium ${paymentMethod === "mpesa" ? "text-foreground" : "text-muted-foreground"}`}
+                                    >
+                                        M-Pesa
+                                    </span>
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setPaymentMethod("card")}
-                                    className={`flex-1 p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${paymentMethod === "card"
-                                        ? "border-gold bg-gold/5"
-                                        : "border-border hover:border-gold/50"
-                                        }`}
+                                    className={`flex-1 p-4 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${
+                                        paymentMethod === "card"
+                                            ? "border-gold bg-gold/5"
+                                            : "border-border hover:border-gold/50"
+                                    }`}
                                 >
-                                    <CreditCard className={`w-6 h-6 ${paymentMethod === "card" ? "text-gold" : "text-muted-foreground"}`} />
-                                    <span className={`font-medium ${paymentMethod === "card" ? "text-foreground" : "text-muted-foreground"}`}>Card</span>
+                                    <CreditCard
+                                        className={`w-6 h-6 ${paymentMethod === "card" ? "text-gold" : "text-muted-foreground"}`}
+                                    />
+                                    <span
+                                        className={`text-sm font-medium ${paymentMethod === "card" ? "text-foreground" : "text-muted-foreground"}`}
+                                    >
+                                        Card
+                                    </span>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setPaymentMethod("stripe")}
+                                    className={`flex-1 p-4 rounded-xl border-2 flex flex-col items-center justify-center gap-2 transition-all ${
+                                        paymentMethod === "stripe"
+                                            ? "border-[#635BFF] bg-[#635BFF]/5"
+                                            : "border-border hover:border-[#635BFF]/50"
+                                    }`}
+                                >
+                                    <StripeLogo />
+                                    <span
+                                        className={`text-sm font-medium ${paymentMethod === "stripe" ? "text-[#635BFF]" : "text-muted-foreground"}`}
+                                    >
+                                        Stripe
+                                    </span>
                                 </button>
                             </div>
 
-                            <form onSubmit={handlePayment} className="space-y-4">
-                                {paymentMethod === "mpesa" ? (
-                                    <div className="space-y-4 animate-fade-in">
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium">M-Pesa Phone Number</label>
-                                            <input
-                                                type="tel"
-                                                placeholder="07XX XXX XXX"
-                                                required
-                                                value={mpesaNumber}
-                                                onChange={(e) => setMpesaNumber(e.target.value)}
-                                                className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
-                                            />
-                                            <p className="text-xs text-muted-foreground">
-                                                You will receive an M-Pesa prompt on your phone to complete the payment.
-                                            </p>
-                                        </div>
+                            {/* M-Pesa form */}
+                            {paymentMethod === "mpesa" && (
+                                <form onSubmit={handleMpesaPayment} className="space-y-4 animate-fade-in">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">M-Pesa Phone Number</label>
+                                        <input
+                                            type="tel"
+                                            placeholder="07XX XXX XXX"
+                                            required
+                                            value={mpesaNumber}
+                                            onChange={(e) => setMpesaNumber(e.target.value)}
+                                            className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            You will receive an M-Pesa prompt on your phone to complete the payment.
+                                        </p>
                                     </div>
-                                ) : (
-                                    <div className="space-y-4 animate-fade-in">
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium">Card Number</label>
-                                            <input
-                                                type="text"
-                                                placeholder="0000 0000 0000 0000"
-                                                required
-                                                value={cardNumber}
-                                                onChange={(e) => setCardNumber(e.target.value)}
-                                                className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
-                                            />
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-medium">Expiry Date</label>
-                                                <input
-                                                    type="text"
-                                                    placeholder="MM/YY"
-                                                    required
-                                                    value={cardExpiry}
-                                                    onChange={(e) => setCardExpiry(e.target.value)}
-                                                    className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-medium">CVC</label>
-                                                <input
-                                                    type="text"
-                                                    placeholder="123"
-                                                    required
-                                                    value={cardCvc}
-                                                    onChange={(e) => setCardCvc(e.target.value)}
-                                                    className="w-full p-3 rounded-lg bg-background border border-border focus:border-gold outline-none transition-colors"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
+                                    <Button
+                                        type="submit"
+                                        variant="gold"
+                                        size="lg"
+                                        className="w-full mt-6"
+                                        disabled={isProcessing}
+                                    >
+                                        {isProcessing ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                Sending Request...
+                                            </>
+                                        ) : (
+                                            `Pay KES ${kshAmount.toLocaleString()}`
+                                        )}
+                                    </Button>
+                                </form>
+                            )}
 
-                                <Button
-                                    type="submit"
-                                    variant="gold"
-                                    size="lg"
-                                    className="w-full mt-6"
-                                    disabled={isProcessing}
-                                >
-                                    {isProcessing ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                            {paymentMethod === "mpesa" ? "Sending Request..." : "Processing Payment..."}
-                                        </>
+                            {/* Stripe payment form (card tab or stripe tab) */}
+                            {(paymentMethod === "card" || paymentMethod === "stripe") && (
+                                <div className="animate-fade-in">
+                                    {isLoadingStripe ? (
+                                        <div className="flex items-center justify-center py-10 gap-3 text-muted-foreground">
+                                            <Loader2 className="w-5 h-5 animate-spin text-gold" />
+                                            <span>Loading secure payment form...</span>
+                                        </div>
+                                    ) : clientSecret && stripePromise ? (
+                                        <Elements
+                                            key={clientSecret}
+                                            stripe={stripePromise}
+                                            options={{
+                                                clientSecret,
+                                                appearance: stripeAppearance,
+                                            }}
+                                        >
+                                            <StripeCheckoutForm
+                                                totalPrice={totalPrice}
+                                                email={email}
+                                                address={address}
+                                                items={items}
+                                                paymentMethod={paymentMethod}
+                                                onPaymentSuccess={completeOrder}
+                                            />
+                                        </Elements>
                                     ) : (
-                                        paymentMethod === "mpesa"
-                                            ? `Pay KES ${kshAmount.toLocaleString()}`
-                                            : `Pay $${totalPrice.toLocaleString()}`
+                                        !isLoadingStripe && (
+                                            <div className="text-center py-8 text-muted-foreground">
+                                                <p>Card payment unavailable. Please use M-Pesa or try again.</p>
+                                            </div>
+                                        )
                                     )}
-                                </Button>
-                            </form>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -355,7 +421,9 @@ const Checkout = () => {
                                         <div className="flex-1 min-w-0">
                                             <h4 className="text-sm font-medium truncate">{item.name}</h4>
                                             <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
-                                            <p className="text-sm font-semibold">${(item.price * item.quantity).toLocaleString()}</p>
+                                            <p className="text-sm font-semibold">
+                                                ${(item.price * item.quantity).toLocaleString()}
+                                            </p>
                                         </div>
                                     </div>
                                 ))}
@@ -392,7 +460,10 @@ const Checkout = () => {
                 onClose={() => setShowStkModal(false)}
                 onConfirm={handleStkConfirm}
                 amount={kshAmount}
-                accountReference={items.map(i => i.name).join(", ").substring(0, 12)}
+                accountReference={items
+                    .map((i) => i.name)
+                    .join(", ")
+                    .substring(0, 12)}
             />
         </div>
     );

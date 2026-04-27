@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Package, Truck, AlertCircle } from "lucide-react";
 import OptimizedImage from "@/components/OptimizedImage";
+import type { StripeOrderContext } from "@/components/StripeCheckoutForm";
+
+const SESSION_KEY = "_stripe_pending_order";
 
 interface Order {
     id: number;
@@ -26,23 +28,116 @@ const OrderConfirmation = () => {
 
     useEffect(() => {
         const fetchOrder = async () => {
-            // Check if order data was passed via navigation state
+            // 1. Order passed directly via navigation state (normal in-page Stripe flow)
             if (location.state?.order) {
                 setOrder(location.state.order);
                 setLoading(false);
                 return;
             }
 
-            if (!orderId) return;
+            // 2. Stripe redirect return — payment_intent & redirect_status are in the URL
+            const searchParams = new URLSearchParams(location.search);
+            const redirectStatus = searchParams.get("redirect_status");
+            const paymentIntentId = searchParams.get("payment_intent");
+
+            if (redirectStatus && paymentIntentId) {
+                if (redirectStatus !== "succeeded") {
+                    setError(
+                        redirectStatus === "requires_payment_method"
+                            ? "Payment was not completed. Please try again."
+                            : `Payment ${redirectStatus}. Please contact support with reference: ${paymentIntentId}`
+                    );
+                    setLoading(false);
+                    return;
+                }
+
+                // Payment succeeded via redirect. Recover order context from sessionStorage.
+                const raw = sessionStorage.getItem(SESSION_KEY);
+                if (raw) {
+                    sessionStorage.removeItem(SESSION_KEY);
+                    try {
+                        const ctx = JSON.parse(raw) as StripeOrderContext;
+
+                        let newOrderId = Math.floor(Math.random() * 1000000).toString();
+
+                        // Create order in local DB
+                        try {
+                            const dbRes = await fetch("/api/orders", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    customer_email: ctx.email,
+                                    customer_phone: null,
+                                    total_amount: ctx.totalPrice,
+                                    status: "pending",
+                                    items: ctx.items,
+                                    payment_method: ctx.paymentMethod,
+                                }),
+                            });
+                            if (dbRes.ok) {
+                                const data = await dbRes.json();
+                                newOrderId = data.id.toString();
+                            }
+                        } catch (dbErr) {
+                            console.error("Post-redirect order creation failed:", dbErr);
+                        }
+
+                        // Send confirmation email
+                        try {
+                            await fetch("/api/send-email", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    type: "confirmation",
+                                    email: ctx.email,
+                                    address: ctx.address,
+                                    items: ctx.items,
+                                    total: ctx.totalPrice,
+                                    orderId: newOrderId,
+                                    paymentMethod: ctx.paymentMethod === "stripe" ? "Stripe" : "Card",
+                                }),
+                            });
+                        } catch (emailErr) {
+                            console.error("Post-redirect email failed:", emailErr);
+                        }
+
+                        setOrder({
+                            id: parseInt(newOrderId),
+                            created_at: new Date().toISOString(),
+                            customer_email: ctx.email,
+                            total_amount: ctx.totalPrice,
+                            status: "pending",
+                            items: ctx.items,
+                            payment_method: ctx.paymentMethod,
+                        });
+                        setLoading(false);
+                        return;
+                    } catch (parseErr) {
+                        console.error("Failed to parse session order context:", parseErr);
+                    }
+                }
+
+                // Session context missing (e.g. different device / browser restart).
+                // Payment went through — show a support message with the Stripe reference.
+                setError(
+                    `Your payment was confirmed (Ref: ${paymentIntentId}). ` +
+                    `Please contact support with this reference to complete your order.`
+                );
+                setLoading(false);
+                return;
+            }
+
+            // 3. Direct navigation by orderId (e.g. link from email)
+            if (!orderId) {
+                setError("Order not found.");
+                setLoading(false);
+                return;
+            }
 
             try {
-                const { data, error } = await supabase
-                    .from('orders')
-                    .select('*')
-                    .eq('id', orderId)
-                    .single();
-
-                if (error) throw error;
+                const res = await fetch(`/api/orders/${orderId}`);
+                if (!res.ok) throw new Error("Order not found");
+                const data = await res.json();
                 setOrder(data);
             } catch (err) {
                 console.error("Error fetching order:", err);
@@ -53,17 +148,17 @@ const OrderConfirmation = () => {
         };
 
         fetchOrder();
-    }, [orderId, location.state]);
+    }, [orderId, location.state, location.search]);
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'pending': return 'text-yellow-600 bg-yellow-100';
-            case 'processing': return 'text-blue-600 bg-blue-100';
-            case 'shipped': return 'text-purple-600 bg-purple-100';
-            case 'delivered': return 'text-green-600 bg-green-100';
-            case 'cancelled': return 'text-red-600 bg-red-100';
-            case 'Approved, Shipping in progress': return 'text-indigo-600 bg-indigo-100';
-            default: return 'text-gray-600 bg-gray-100';
+            case "pending": return "text-yellow-600 bg-yellow-100";
+            case "processing": return "text-blue-600 bg-blue-100";
+            case "shipped": return "text-purple-600 bg-purple-100";
+            case "delivered": return "text-green-600 bg-green-100";
+            case "cancelled": return "text-red-600 bg-red-100";
+            case "Approved, Shipping in progress": return "text-indigo-600 bg-indigo-100";
+            default: return "text-gray-600 bg-gray-100";
         }
     };
 
@@ -169,7 +264,8 @@ const OrderConfirmation = () => {
                                 What's Next?
                             </h3>
                             <p className="text-muted-foreground text-sm">
-                                You will receive an email confirmation shortly at <span className="font-medium text-foreground">{order.customer_email}</span>.
+                                You will receive an email confirmation shortly at{" "}
+                                <span className="font-medium text-foreground">{order.customer_email}</span>.
                                 We will notify you again when your order ships.
                             </p>
                         </div>
