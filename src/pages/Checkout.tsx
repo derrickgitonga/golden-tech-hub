@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StripeCheckoutForm from "@/components/StripeCheckoutForm";
+import SimulatedCardForm from "@/components/SimulatedCardForm";
 import { CreditCard, Smartphone, Loader2, CheckCircle2, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -55,9 +56,9 @@ const Checkout = () => {
 
     const kshAmount = Math.round(totalPrice * EXCHANGE_RATE);
 
-    // Pre-fetch PaymentIntent as soon as user switches to card or stripe tab
+    // Pre-fetch PaymentIntent as soon as user switches to the stripe tab
     useEffect(() => {
-        const usesStripe = paymentMethod === "card" || paymentMethod === "stripe";
+        const usesStripe = paymentMethod === "stripe";
         if (!usesStripe || items.length === 0) {
             setClientSecret(null);
             return;
@@ -365,8 +366,18 @@ const Checkout = () => {
                                 </form>
                             )}
 
-                            {/* Stripe payment form (card tab or stripe tab) */}
-                            {(paymentMethod === "card" || paymentMethod === "stripe") && (
+                            {/* Simulated card form */}
+                            {paymentMethod === "card" && (
+                                <SimulatedCardForm
+                                    totalPrice={totalPrice}
+                                    email={email}
+                                    address={address}
+                                    onPaymentSuccess={() => completeOrder()}
+                                />
+                            )}
+
+                            {/* Real Stripe payment form */}
+                            {paymentMethod === "stripe" && (
                                 <div className="animate-fade-in">
                                     {isLoadingStripe ? (
                                         <div className="flex items-center justify-center py-10 gap-3 text-muted-foreground">
@@ -394,7 +405,7 @@ const Checkout = () => {
                                     ) : (
                                         !isLoadingStripe && (
                                             <div className="text-center py-8 text-muted-foreground">
-                                                <p>Card payment unavailable. Please use M-Pesa or try again.</p>
+                                                <p>Stripe payment unavailable. Please try again.</p>
                                             </div>
                                         )
                                     )}
