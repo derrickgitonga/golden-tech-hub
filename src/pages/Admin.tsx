@@ -8,6 +8,7 @@ import { Trash2, Plus, X, Package, Truck, CheckCircle, AlertCircle } from "lucid
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { formatPrice } from "@/utils/price";
 
 interface Order {
     id: number;
@@ -376,7 +377,7 @@ const Admin = () => {
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td className="p-4 font-medium">${product.price}</td>
+                                                        <td className="p-4 font-medium">{formatPrice(product.price)}</td>
                                                         <td className="p-4 text-muted-foreground capitalize">{product.category || "-"}</td>
                                                         <td className="p-4 text-right">
                                                             <Button
@@ -436,7 +437,7 @@ const Admin = () => {
                                                         <span className="text-xs text-muted-foreground">{order.payment_method}</span>
                                                     </div>
                                                 </td>
-                                                <td className="p-4 font-medium">${order.total_amount.toLocaleString()}</td>
+                                                <td className="p-4 font-medium">{formatPrice(order.total_amount)}</td>
                                                 <td className="p-4">
                                                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                                                         {order.status}

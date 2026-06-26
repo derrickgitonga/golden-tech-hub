@@ -11,7 +11,7 @@ const trustFeatures = [
   {
     icon: Truck,
     title: "Free Shipping",
-    description: "On orders over $99 worldwide",
+    description: "On orders over Ksh 12,000 worldwide",
     path: "/coming-soon",
   },
   {

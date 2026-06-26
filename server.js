@@ -350,7 +350,7 @@ app.post('/api/send-email', async (req, res) => {
                 <img src="${imageUrl}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />
                 <div>
                     <p style="margin: 0 0 5px 0;"><strong>${item.name}</strong></p>
-                    <p style="margin: 0; color: #666;">Qty: ${item.quantity} | Price: $${item.price.toLocaleString()}</p>
+                    <p style="margin: 0; color: #666;">Qty: ${item.quantity} | Price: Ksh ${(item.price * 129).toLocaleString()}</p>
                 </div>
             </div>`;
         }).join('');
@@ -367,7 +367,7 @@ app.post('/api/send-email', async (req, res) => {
                     <p><strong>Delivery Address:</strong> ${address || 'Not provided'}</p>
                     <div style="margin-top: 20px;">${itemsHtml}</div>
                     <div style="border-top: 2px solid #D4AF37; margin-top: 20px; padding-top: 10px;">
-                        <h3>Total: $${total.toLocaleString()}</h3>
+                        <h3>Total: Ksh ${(total * 129).toLocaleString()}</h3>
                     </div>
                 </div>
                 <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #4caf50;">
@@ -389,7 +389,7 @@ app.post('/api/send-email', async (req, res) => {
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h1 style="color: #D4AF37;">New Order Received!</h1>
                     <p>Order #${orderId} has been placed.</p>
-                    <p><strong>Total:</strong> $${total ? total.toLocaleString() : '0'}</p>
+                    <p><strong>Total:</strong> Ksh ${(total ? (total * 129) : 0).toLocaleString()}</p>
                     <p><strong>Payment:</strong> ${paymentMethod}</p>
                     <div style="margin: 30px 0; text-align: center;">
                         <a href="${approveLink}" style="background-color: #4CAF50; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 4px; font-size: 16px;">

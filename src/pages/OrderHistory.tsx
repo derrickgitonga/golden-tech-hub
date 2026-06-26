@@ -8,6 +8,7 @@ import { Loader2, Package, Calendar, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import OptimizedImage from "@/components/OptimizedImage";
+import { formatPrice } from "@/utils/price";
 
 interface OrderItem {
     id: number;
@@ -142,7 +143,7 @@ const OrderHistory = () => {
                                         <Badge variant="secondary" className={getStatusColor(order.status)}>
                                             {order.status}
                                         </Badge>
-                                        <span className="font-bold text-lg">${order.total_amount.toLocaleString()}</span>
+                                        <span className="font-bold text-lg">{formatPrice(order.total_amount)}</span>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="pt-6">
@@ -157,7 +158,7 @@ const OrderHistory = () => {
                                                     <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="font-medium">${item.price.toLocaleString()}</p>
+                                                    <p className="font-medium">{formatPrice(item.price)}</p>
                                                 </div>
                                             </div>
                                         ))}

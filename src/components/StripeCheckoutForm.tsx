@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";
 import type { CartItem } from "@/contexts/CartContext";
+import { formatPrice } from "@/utils/price";
 
 export interface StripeOrderContext {
     email: string;
@@ -133,7 +134,7 @@ const StripeCheckoutForm = ({
                 ) : (
                     <>
                         <Lock className="w-4 h-4 mr-2" />
-                        Pay ${totalPrice.toLocaleString()}
+                        Pay {formatPrice(totalPrice)}
                     </>
                 )}
             </Button>

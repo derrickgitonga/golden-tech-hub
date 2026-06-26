@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Package, Truck, AlertCircle } from "lucide-react";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { StripeOrderContext } from "@/components/StripeCheckoutForm";
+import { formatPrice } from "@/utils/price";
 
 const SESSION_KEY = "_stripe_pending_order";
 
@@ -245,7 +246,7 @@ const OrderConfirmation = () => {
                                                 <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
                                             </div>
                                         </div>
-                                        <p className="font-medium">${(item.price * item.quantity).toLocaleString()}</p>
+                                        <p className="font-medium">{formatPrice(item.price * item.quantity)}</p>
                                     </div>
                                 ))}
                             </div>
@@ -253,7 +254,7 @@ const OrderConfirmation = () => {
                             <div className="mt-8 pt-6 border-t border-border">
                                 <div className="flex justify-between items-center text-lg font-bold">
                                     <span>Total Amount</span>
-                                    <span>${order.total_amount.toLocaleString()}</span>
+                                    <span>{formatPrice(order.total_amount)}</span>
                                 </div>
                             </div>
                         </div>

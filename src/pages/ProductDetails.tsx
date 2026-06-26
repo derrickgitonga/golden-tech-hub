@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Star, ShoppingBag, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 import OptimizedImage from "@/components/OptimizedImage";
+import { formatPrice } from "@/utils/price";
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -159,11 +160,11 @@ const ProductDetails = () => {
                             </div>
 
                             <div className="flex items-center gap-4 text-3xl font-semibold text-foreground">
-                                ${currentPrice.toLocaleString()}
+                                {formatPrice(currentPrice)}
                                 {product.originalPrice && (
                                     <>
                                         <span className="text-xl text-muted-foreground line-through">
-                                            ${product.originalPrice.toLocaleString()}
+                                            {formatPrice(product.originalPrice)}
                                         </span>
                                         <span className="px-3 py-1 rounded-full bg-gold/10 text-gold text-sm font-medium">
                                             Save {discount}%
@@ -233,7 +234,7 @@ const ProductDetails = () => {
                                                             {storage.size}
                                                         </div>
                                                         <div className="text-sm text-muted-foreground">
-                                                            ${storage.price.toLocaleString()}
+                                                            {formatPrice(storage.price)}
                                                         </div>
                                                     </div>
                                                 </button>

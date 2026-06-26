@@ -12,8 +12,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import StkPushModal from "@/components/StkPushModal";
 import OptimizedImage from "@/components/OptimizedImage";
-
-const EXCHANGE_RATE = 129; // 1 USD = 129 KSH
+import { formatPrice, EXCHANGE_RATE } from "@/utils/price";
 
 const StripeLogo = () => (
     <img src="/Stripe_Logo.png" alt="Stripe" className="w-16 h-6 object-contain" />
@@ -433,7 +432,7 @@ const Checkout = () => {
                                             <h4 className="text-sm font-medium truncate">{item.name}</h4>
                                             <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                                             <p className="text-sm font-semibold">
-                                                ${(item.price * item.quantity).toLocaleString()}
+                                                {formatPrice(item.price * item.quantity)}
                                             </p>
                                         </div>
                                     </div>
@@ -443,22 +442,16 @@ const Checkout = () => {
                             <div className="border-t border-border pt-4 space-y-2">
                                 <div className="flex justify-between text-muted-foreground">
                                     <span>Subtotal</span>
-                                    <span>${totalPrice.toLocaleString()}</span>
+                                    <span>{formatPrice(totalPrice)}</span>
                                 </div>
                                 <div className="flex justify-between text-muted-foreground">
                                     <span>Shipping</span>
                                     <span>Free</span>
                                 </div>
                                 <div className="flex justify-between font-semibold text-lg pt-2 border-t border-border mt-2">
-                                    <span>Total (USD)</span>
-                                    <span>${totalPrice.toLocaleString()}</span>
+                                    <span>Total</span>
+                                    <span>{formatPrice(totalPrice)}</span>
                                 </div>
-                                {paymentMethod === "mpesa" && (
-                                    <div className="flex justify-between font-semibold text-lg pt-2 text-gold animate-fade-in">
-                                        <span>Total (KES)</span>
-                                        <span>KES {kshAmount.toLocaleString()}</span>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>

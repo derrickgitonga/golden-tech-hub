@@ -4,6 +4,7 @@ import { Heart, Star, ShoppingBag, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import OptimizedImage from "@/components/OptimizedImage";
+import { formatPrice } from "@/utils/price";
 
 interface Product {
   id: number;
@@ -171,12 +172,12 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
 
         <div className="flex items-center gap-3">
           <span className={`font-display text-lg md:text-2xl font-semibold ${isSmartphone ? 'text-gray-900' : 'text-foreground'}`}>
-            ${product.price.toLocaleString()}
+            {formatPrice(product.price)}
           </span>
           {product.originalPrice && (
             <>
               <span className={`text-sm line-through ${isSmartphone ? 'text-gray-500' : 'text-muted-foreground'}`}>
-                ${product.originalPrice.toLocaleString()}
+                {formatPrice(product.originalPrice)}
               </span>
               <span className={`px-2 py-0.5 rounded text-xs font-medium ${isSmartphone ? 'bg-gray-900 text-white' : 'bg-gold/10 text-gold'}`}>
                 -{discount}%

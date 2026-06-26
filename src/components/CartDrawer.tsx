@@ -4,6 +4,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import OptimizedImage from "@/components/OptimizedImage";
+import { formatPrice } from "@/utils/price";
 
 const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart } = useCart();
@@ -75,7 +76,7 @@ const CartDrawer = () => {
                     </p>
                     <h4 className="font-medium text-foreground truncate">{item.name}</h4>
                     <p className="text-lg font-semibold text-foreground mt-1">
-                      ${item.price.toLocaleString()}
+                      {formatPrice(item.price)}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <button
@@ -111,7 +112,7 @@ const CartDrawer = () => {
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Subtotal</span>
               <span className="font-display text-2xl font-semibold text-foreground">
-                ${totalPrice.toLocaleString()}
+                {formatPrice(totalPrice)}
               </span>
             </div>
             <Button

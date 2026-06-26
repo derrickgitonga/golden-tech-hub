@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, CreditCard } from "lucide-react";
 import { toast } from "sonner";
+import { formatPrice } from "@/utils/price";
 
 interface SimulatedCardFormProps {
     totalPrice: number;
@@ -169,7 +170,7 @@ const SimulatedCardForm = ({ totalPrice, email, address, onPaymentSuccess }: Sim
             </div>
 
             <Button type="submit" variant="gold" size="lg" className="w-full mt-6">
-                Pay ${totalPrice.toLocaleString()}
+                Pay {formatPrice(totalPrice)}
             </Button>
 
         </form>

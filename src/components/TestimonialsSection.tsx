@@ -15,7 +15,7 @@ const testimonials = [
     name: "Marcus Johnson",
     role: "Video Producer",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-    content: "The similar products feature helped me discover alternatives I never knew existed. Saved $500 on my camera setup without compromising quality.",
+    content: "The similar products feature helped me discover alternatives I never knew existed. Saved Ksh 64,500 on my camera setup without compromising quality.",
     rating: 5,
     product: "Sony A7 IV Camera",
   },
