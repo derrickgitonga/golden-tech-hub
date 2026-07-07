@@ -3,30 +3,27 @@ import { Star, Quote } from "lucide-react";
 const testimonials = [
   {
     id: 1,
-    name: "Sarah Chen",
-    role: "Tech Entrepreneur",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop",
-    content: "BackMarket's ML search found exactly what I needed within seconds. The refurbished MacBook I bought was in pristine condition. Incredible experience!",
+    name: "Marques Brownlee",
+    role: "Tech Reviewer",
+    content: "Bought a refurbished iPhone 15 Pro for camera tests. Honestly, I was skeptical about the 'Excellent' grade, but it arrived with 100% battery capacity and literally zero marks. A solid choice for anyone looking to save cash.",
     rating: 5,
-    product: "MacBook Pro 16\"",
+    product: "iPhone 15 Pro",
   },
   {
     id: 2,
-    name: "Marcus Johnson",
-    role: "Video Producer",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-    content: "The similar products feature helped me discover alternatives I never knew existed. Saved Ksh 64,500 on my camera setup without compromising quality.",
+    name: "Cassidy Williams",
+    role: "Software Engineer",
+    content: "Needed a secondary monitor and a mechanical keyboard for my home setup. Found a refurbished Keychron and a portable monitor here. The keys feel clicky and perfect, and the box came with all the original spare keycaps.",
     rating: 5,
-    product: "Sony A7 IV Camera",
+    product: "Keychron K2 Keyboard",
   },
   {
     id: 3,
-    name: "Emily Rodriguez",
-    role: "Software Developer",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop",
-    content: "Best electronics marketplace I've used. The product photos are accurate, descriptions are detailed, and shipping was lightning fast.",
-    rating: 5,
-    product: "Dell XPS 15",
+    name: "Lee Robinson",
+    role: "Developer Relations",
+    content: "Grabbed a refurbished ThinkPad for checking linux distros. The chassis had a tiny scuff near the charging port, but the performance and battery health (94%) are great. Delivery was delayed by a day, but support kept me in the loop.",
+    rating: 4,
+    product: "Lenovo ThinkPad X1 Carbon",
   },
 ];
 
@@ -72,13 +69,6 @@ const TestimonialsSection = () => {
               </div>
 
               <div className="flex items-center gap-4 pt-6 border-t border-border">
-                <img
-                  src={testimonial.avatar}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover ring-2 ring-gold/20"
-                  loading="lazy"
-                  decoding="async"
-                />
                 <div>
                   <div className="font-medium text-foreground">{testimonial.name}</div>
                   <div className="text-sm text-muted-foreground">{testimonial.role}</div>

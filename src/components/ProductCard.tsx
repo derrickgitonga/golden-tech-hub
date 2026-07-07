@@ -142,11 +142,11 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
 
 
       <div className="p-3 md:p-5">
-        <div className={`text-xs font-medium uppercase tracking-wider mb-2 ${isSmartphone ? 'text-gray-900' : 'text-gold'}`}>
+        <div className={`text-xs font-medium uppercase tracking-wider mb-2 ${isSmartphone ? 'text-gray-900' : 'text-gray-400'}`}>
           {product.brand}
         </div>
         <Link to={`/product/${product.id}`}>
-          <h3 className={`font-display text-sm md:text-lg font-medium mb-2 md:mb-3 line-clamp-2 transition-colors ${isSmartphone ? 'text-gray-900 group-hover:text-gray-700' : 'text-foreground group-hover:text-gold'}`}>
+          <h3 className={`font-display text-sm md:text-lg font-medium mb-2 md:mb-3 line-clamp-2 transition-colors ${isSmartphone ? 'text-gray-900 group-hover:text-gray-700' : 'text-foreground group-hover:text-gray-300'}`}>
             {product.name}
           </h3>
         </Link>
@@ -179,7 +179,7 @@ const ProductCard = ({ product, containImage = false }: ProductCardProps) => {
               <span className={`text-sm line-through ${isSmartphone ? 'text-gray-500' : 'text-muted-foreground'}`}>
                 {formatPrice(product.originalPrice)}
               </span>
-              <span className={`px-2 py-0.5 rounded text-xs font-medium ${isSmartphone ? 'bg-gray-900 text-white' : 'bg-gold/10 text-gold'}`}>
+              <span className={`px-2 py-0.5 rounded text-xs font-medium ${isSmartphone ? 'bg-gray-900 text-white' : 'bg-gold text-black'}`}>
                 -{discount}%
               </span>
             </>

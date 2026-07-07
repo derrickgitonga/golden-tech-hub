@@ -71,6 +71,13 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      textColor: {
+        gold: {
+          DEFAULT: "#000000",
+          muted: "#1a1a1a",
+          glow: "#333333",
+        },
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
